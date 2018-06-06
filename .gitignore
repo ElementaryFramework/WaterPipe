@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+
+# Visual Studio Code
+.vscode/
+
+# IntelliJ platforms
+.idea/
+
+# PHP Code Sniffer config
+.php_cs
+
+# Composer files and dependencies
+vendor/
+composer.lock
+
+# Test files and folders
+tests/
+
+# Docs (hidden for now)
+docs/
