@@ -1,0 +1,36 @@
+{
+  "name": "elementaryframework/water-pipe",
+  "description": "URL routing framework and requests/responses handler for PHP",
+  "type": "library",
+  "require-dev": {
+    "phpunit/phpunit": "^7"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Axel Nana",
+      "email": "ax.lnana@outlook.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1.10"
+  },
+  "keywords": [
+    "url",
+    "rewriting",
+    "routing",
+    "middleware",
+    "http",
+    "request",
+    "response",
+    "get",
+    "post",
+    "put",
+    "delete"
+  ],
+  "autoload": {
+    "psr-4": {
+      "ElementaryFramework\\WaterPipe\\": "src/WaterPipe/"
+    }
+  }
+}
