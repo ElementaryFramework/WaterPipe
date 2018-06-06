@@ -154,5 +154,235 @@ class RequestHeader extends Header
         return $this->getField("Content-Type");
     }
 
+    public function setDate(string $value)
+    {
+        $this->setField("Date", $value);
+    }
+
+    public function getDate(): string
+    {
+        return $this->getField("Date");
+    }
+
+    public function setExpect(string $value)
+    {
+        $this->setField("Expect", $value);
+    }
+
+    public function getExpect(): string
+    {
+        return $this->getField("Expect");
+    }
+
+    public function setForwarded(string $value)
+    {
+        $this->setField("Forwarded", $value);
+    }
+
+    public function getForwarded(): string
+    {
+        return $this->getField("Forwarded");
+    }
+
+    public function setFrom(string $value)
+    {
+        $this->setField("From", $value);
+    }
+
+    public function getFrom(): string
+    {
+        return $this->getField("From");
+    }
+
+    public function setHost(string $value)
+    {
+        $this->setField("Host", $value);
+    }
+
+    public function getHost(): string
+    {
+        return $this->getField("Host");
+    }
+
+    public function setIfMatch(string $value)
+    {
+        $this->setField("If-Match", $value);
+    }
+
+    public function getIfMatch(): string
+    {
+        return $this->getField("If-Match");
+    }
+
+    public function setIfModifiedSince(string $value)
+    {
+        $this->setField("If-Modified-Since", $value);
+    }
+
+    public function getIfModifiedSince(): string
+    {
+        return $this->getField("If-Modified-Since");
+    }
+
+    public function setIfNoneMatch(string $value)
+    {
+        $this->setField("If-None-Match", $value);
+    }
+
+    public function getIfNoneMatch(): string
+    {
+        return $this->getField("If-None-Match");
+    }
+
+    public function setIfRange(string $value)
+    {
+        $this->setField("If-Range", $value);
+    }
+
+    public function getIfRange(): string
+    {
+        return $this->getField("If-Range");
+    }
+
+    public function setIfUnmodifiedSince(string $value)
+    {
+        $this->setField("If-Unmodified-Since", $value);
+    }
+
+    public function getIfUnmodifiedSince(): string
+    {
+        return $this->getField("If-Unmodified-Since");
+    }
+
+    public function setMaxForward(int $value)
+    {
+        $this->setField("Max-Forward", $value);
+    }
+
+    public function getMaxForward(): int
+    {
+        return $this->getField("Max-Forward");
+    }
+
+    public function setOrigin(string $value)
+    {
+        $this->setField("Origin", $value);
+    }
+
+    public function getOrigin(): string
+    {
+        return $this->getField("Origin");
+    }
+
+    public function setPragma(string $value)
+    {
+        $this->setField("Pragma", $value);
+    }
+
+    public function getPragma(): string
+    {
+        return $this->getField("Pragma");
+    }
+
+    public function setProxyAuthorization(string $value)
+    {
+        $this->setField("Proxy-Authorization", $value);
+    }
+
+    public function getProxyAuthorization(): string
+    {
+        return $this->getField("Proxy-Authorization");
+    }
+
+    public function setRange(string $value)
+    {
+        $this->setField("Range", $value);
+    }
+
+    public function getRange(): string
+    {
+        return $this->getField("Range");
+    }
+
+    public function setRefer(string $value)
+    {
+        $this->setField("Refer", $value);
+    }
+
+    public function getRefer(): string
+    {
+        return $this->getField("Refer");
+    }
+
+    public function setTE(string $value)
+    {
+        $this->setField("TE", $value);
+    }
+
+    public function getTE(): string
+    {
+        return $this->getField("TE");
+    }
+
+    public function setUserAgent(string $value)
+    {
+        $this->setField("User-Agent", $value);
+    }
+
+    public function getUsrAgent(): string
+    {
+        return $this->getField("User-Agent");
+    }
+
+    public function setUpgrade(string $value)
+    {
+        $this->setField("Upgrade", $value);
+    }
+
+    public function getUpdate(): string
+    {
+        return $this->getField("Upgrade");
+    }
+
+    public function setVia(string $value)
+    {
+        $this->setField("Via", $value);
+    }
+
+    public function getVia(): string
+    {
+        return $this->getField("Via");
+    }
+
+    public function setWarning(string $value)
+    {
+        $this->setField("Warning", $value);
+    }
+
+    public function getWarning(): string
+    {
+        return $this->getField("Warning");
+    }
+
+    public function setRequestedWith(string $value)
+    {
+        $this->setField("X-Requested-With", $value);
+    }
+
+    public function getRequestedWith(): string
+    {
+        return $this->getField("X-Requested-With");
+    }
+
+    public function setCsrfToken(string $value)
+    {
+        $this->setField("X-Csrf-Token", $value);
+    }
+
+    public function getCsrfToken(): string
+    {
+        return $this->getField("X-Csrf-Token");
+    }
+
     // TODO: https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 }
