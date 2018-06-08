@@ -40,9 +40,14 @@ class Request
     private $_method;
 
     /**
-     * @var RequestParameters
+     * @var RequestData
      */
     private $_params;
+
+    /**
+     * @var RequestData
+     */
+    private $_body;
 
     /**
      * @var string
@@ -66,19 +71,35 @@ class Request
     }
 
     /**
-     * @return RequestParameters
+     * @return RequestData
      */
-    public function getParams(): RequestParameters
+    public function getParams(): RequestData
     {
         return $this->_params;
     }
 
     /**
-     * @param RequestParameters $params
+     * @param RequestData $params
      */
-    public function setParams(RequestParameters $params): void
+    public function setParams(RequestData $params): void
     {
         $this->_params = $params;
+    }
+
+    /**
+     * @return RequestData
+     */
+    public function getBody(): RequestData
+    {
+        return $this->_body;
+    }
+
+    /**
+     * @param RequestData $body
+     */
+    public function setBody(RequestData $body): void
+    {
+        $this->_body = $body;
     }
 
     /**

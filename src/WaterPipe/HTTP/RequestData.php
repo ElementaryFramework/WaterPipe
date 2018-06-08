@@ -32,7 +32,7 @@
 
 namespace ElementaryFramework\WaterPipe\HTTP;
 
-class RequestParameters implements \ArrayAccess, \Countable, \JsonSerializable, \Serializable, \SeekableIterator
+class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Serializable, \SeekableIterator
 {
     /**
      * The array of parameters.
