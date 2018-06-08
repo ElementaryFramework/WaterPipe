@@ -113,7 +113,7 @@ class Response
      * @param int $status
      * @throws \Exception
      */
-    public function sendJson(string $body, int $status = 200)
+    public function sendJsonString(string $body, int $status = 200)
     {
         $config = WaterPipeConfig::get();
 
@@ -122,6 +122,16 @@ class Response
         $this->_body = $body;
 
         $this->send();
+    }
+
+    /**
+     * @param array $json
+     * @param int $status
+     * @throws \Exception
+     */
+    public function sendJson(array $json, int $status = 200)
+    {
+        $this->sendJsonString(json_encode($json), $status);
     }
 
     /**
