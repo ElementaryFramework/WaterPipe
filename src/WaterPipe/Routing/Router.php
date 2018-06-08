@@ -33,8 +33,8 @@
 namespace ElementaryFramework\WaterPipe\Routing;
 
 use ElementaryFramework\WaterPipe\HTTP\Request;
+use ElementaryFramework\WaterPipe\HTTP\RequestData;
 use ElementaryFramework\WaterPipe\HTTP\RequestMethod;
-use ElementaryFramework\WaterPipe\HTTP\RequestParameters;
 use ElementaryFramework\WaterPipe\WaterPipeConfig;
 
 class Router
@@ -79,7 +79,7 @@ class Router
         if (isset($parts[1]) && $config->isQueryStringEnabled()) {
             $_SERVER['QUERY_STRING'] = $parts[1];
             parse_str($_SERVER['QUERY_STRING'], $_GET);
-            $this->_request->setParams(new RequestParameters($_GET));
+            $this->_request->setParams(new RequestData($_GET));
         } else {
             $_SERVER['QUERY_STRING'] = '';
             $_GET = array();
