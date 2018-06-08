@@ -32,11 +32,25 @@
 
 namespace ElementaryFramework\WaterPipe\Routing\Middleware;
 
+use ElementaryFramework\WaterPipe\HTTP\Request;
+
 abstract class Middleware
 {
-    public function setRequest()
+    /**
+     * @var \ElementaryFramework\WaterPipe\HTTP\Request
+     */
+    protected $_request;
+
+    /**
+     * Route constructor.
+     *
+     * @param Request $request The request associated to this route.
+     *
+     * @throws \Exception
+     */
+    public function __construct(Request $request)
     {
-        // TODO: Set the HTTP request here
+        $this->_request = $request;
     }
 
     public abstract function beforeExecute();
