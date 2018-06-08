@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\WaterPipe\HTTP;
 
+use ElementaryFramework\WaterPipe\Exceptions\FileNotFoundException;
 use ElementaryFramework\WaterPipe\WaterPipeConfig;
 
 class Response
@@ -74,8 +75,7 @@ class Response
 
         if (strpos(PHP_SAPI, 'cgi') === 0) {
             header("Status: {$code} {$text}", true);
-        }
-        else {
+        } else {
             $protocol = (array_key_exists('SERVER_PROTOCOL', $_SERVER) && NULL !== $_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
             header("{$protocol} {$code} {$text}", true, $code);
         }
@@ -148,6 +148,32 @@ class Response
         $this->_body = $body;
 
         $this->send();
+    }
+
+    /**
+     * @param string $path
+     * @param int $status
+     * @param string|null $mime
+     * @throws \Exception
+     */
+    public function sendFile(string $path, int $status = 200, string $mime = null)
+    {
+        $config = WaterPipeConfig::get();
+
+        if (file_exists($path)) {
+            $body = file_get_contents($path);
+
+            if ($mime !== null) {
+                $this->_header->setContentType("{$mime}; charset={$config->getDefaultCharset()}");
+            }
+
+            $this->_status = new ResponseStatus($status);
+            $this->_body = $body;
+
+            $this->send();
+        } else {
+            throw new FileNotFoundException("Cannot find the file at path: '{$path}'");
+        }
     }
 
     /**
