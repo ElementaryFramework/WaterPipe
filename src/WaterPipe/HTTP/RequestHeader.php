@@ -383,6 +383,4 @@ class RequestHeader extends Header
     {
         return $this->getField("X-Csrf-Token");
     }
-
-    // TODO: https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 }
