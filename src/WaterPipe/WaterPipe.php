@@ -62,11 +62,18 @@ class WaterPipe
 
     private $_requestRegistry;
 
+    private $_errorsRegistry;
+
     public function __construct()
     {
         $this->_isRunning = false;
         $this->_middlewareRegistry = array();
         $this->_getRequestRegistry = array();
+        $this->_postRequestRegistry = array();
+        $this->_putRequestRegistry = array();
+        $this->_deleteRequestRegistry = array();
+        $this->_requestRegistry = array();
+        $this->_errorsRegistry = array();
     }
 
     public function use(Middleware $middleware)
@@ -129,6 +136,18 @@ class WaterPipe
 
             case RequestMethod::GET:
                 $registry = $this->_getRequestRegistry;
+                break;
+
+            case RequestMethod::POST:
+                $registry = $this->_postRequestRegistry;
+                break;
+
+            case RequestMethod::PUT:
+                $registry = $this->_putRequestRegistry;
+                break;
+
+            case RequestMethod::DELETE:
+                $registry = $this->_deleteRequestRegistry;
                 break;
         }
 
