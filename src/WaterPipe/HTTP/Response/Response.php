@@ -30,7 +30,7 @@
  * @link      http://waterpipe.na2axl.tk
  */
 
-namespace ElementaryFramework\WaterPipe\HTTP;
+namespace ElementaryFramework\WaterPipe\HTTP\Response;
 
 use ElementaryFramework\WaterPipe\Exceptions\FileNotFoundException;
 use ElementaryFramework\WaterPipe\WaterPipeConfig;

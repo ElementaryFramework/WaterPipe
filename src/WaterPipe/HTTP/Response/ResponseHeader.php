@@ -30,7 +30,9 @@
  * @link      http://waterpipe.na2axl.tk
  */
 
-namespace ElementaryFramework\WaterPipe\HTTP;
+namespace ElementaryFramework\WaterPipe\HTTP\Response;
+
+use ElementaryFramework\WaterPipe\HTTP\Header;
 
 class ResponseHeader extends Header
 {
