@@ -30,7 +30,7 @@
  * @link      http://waterpipe.na2axl.tk
  */
 
-namespace ElementaryFramework\WaterPipe\HTTP;
+namespace ElementaryFramework\WaterPipe\HTTP\Request;
 
 class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Serializable, \SeekableIterator
 {

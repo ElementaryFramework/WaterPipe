@@ -30,9 +30,7 @@
  * @link      http://waterpipe.na2axl.tk
  */
 
-namespace ElementaryFramework\WaterPipe\HTTP;
-
-use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
+namespace ElementaryFramework\WaterPipe\HTTP\Request;
 
 class Request
 {
