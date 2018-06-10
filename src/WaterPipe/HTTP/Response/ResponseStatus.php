@@ -171,7 +171,7 @@ class ResponseStatus
             $this->_code = $code;
             $this->_description = self::$_registry[$code];
         } else {
-            throw new \Exception("Bad response status code: \"{$code}\"");
+            throw new \Exception("Unregistered response status code: \"{$code}\"");
         }
     }
 
