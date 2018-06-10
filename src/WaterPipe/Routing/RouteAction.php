@@ -50,13 +50,11 @@ abstract class RouteAction
     /**
      * RouteAction constructor.
      *
-     * @param Request $request The request associated to this route.
-     *
      * @throws \Exception
      */
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->_request = $request;
+        $this->_request =& Request::getInstance();
         $this->_response = new Response();
     }
 

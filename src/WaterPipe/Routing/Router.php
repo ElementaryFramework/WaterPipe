@@ -40,13 +40,27 @@ use ElementaryFramework\WaterPipe\WaterPipeConfig;
 class Router
 {
     /**
+     * @var Router
+     */
+    private static $_instance = null;
+
+    /**
      * @var Request
      */
     private $_request;
 
-    public function __construct()
+    private function __construct()
     {
-        $this->_request = new Request();
+        $this->_request =& Request::getInstance();
+    }
+
+    public static function &getInstance()
+    {
+        static $instance;
+
+        $instance[0] = self::$_instance === null ? self::$_instance = new Router() : self::$_instance;
+
+        return $instance[0];
     }
 
     public function build()
@@ -131,7 +145,7 @@ class Router
     /**
      * @return Request
      */
-    public function getRequest(): Request
+    public function &getRequest(): Request
     {
         return $this->_request;
     }

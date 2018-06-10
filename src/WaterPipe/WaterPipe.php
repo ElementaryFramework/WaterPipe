@@ -37,6 +37,7 @@ use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
+use ElementaryFramework\WaterPipe\Routing\Route;
 use ElementaryFramework\WaterPipe\Routing\RouteAction;
 
 class WaterPipe
@@ -76,9 +77,15 @@ class WaterPipe
         $this->_errorsRegistry = array();
     }
 
-    public function use(Middleware $middleware)
+    public function use($plugin)
     {
-        array_push($this->_middlewareRegistry, $middleware);
+        if ($plugin instanceof Middleware) {
+            array_push($this->_middlewareRegistry, $plugin);
+        } elseif ($plugin instanceof Route) {
+            foreach (array("request", "get", "post", "put", "delete") as $method) {
+                call_user_func_array(array($this, $method), array($plugin->getUri(), array($plugin, $method)));
+            }
+        }
     }
 
     public function request(string $uri, $action)
@@ -117,32 +124,16 @@ class WaterPipe
      */
     public function run()
     {
-        $this->exec(Request::capture());
-    }
-
-    /**
-     * Execute a request with the current water pipe.
-     *
-     * This method have to be called AFTER the
-     * definition of all routes. No routes will
-     * be considered after the call of this method.
-     *
-     * @param Request $request The request to execute.
-     *
-     * @throws \Exception
-     */
-    public function exec(Request $request)
-    {
         $this->_isRunning = true;
 
-        $this->_executeRequest($request);
+        $this->_executeRequest();
     }
 
-    private function _executeRequest(Request $request)
+    private function _executeRequest()
     {
         $registry = null;
 
-        switch ($request->getMethod()) {
+        switch (Request::getInstance()->getMethod()) {
             case RequestMethod::UNKNOWN:
                 // TODO: 500 Internal Server Error. Unable to determine the request method.
                 throw new \Exception("500 Error");
@@ -168,10 +159,10 @@ class WaterPipe
             throw new \Exception("Cannot handle a request of this type");
         }
 
-        $runner = $this->_getActionForRoutes($registry, $request);
+        $runner = $this->_getActionForRoutes($registry);
 
         if ($runner === null) {
-            $runner = $this->_getActionForRoutes($this->_requestRegistry, $request);
+            $runner = $this->_getActionForRoutes($this->_requestRegistry);
         }
 
         if ($runner === null) {
@@ -181,10 +172,10 @@ class WaterPipe
 
         // NOTE: No code will normally not be executed after this block...
         if (is_callable($runner) || is_array($runner)) {
-            call_user_func_array($runner, array($request, new Response()));
+            call_user_func_array($runner, array(Request::getInstance(), new Response()));
         } elseif (is_subclass_of($runner, RouteAction::class)) {
             if (is_string($runner)) {
-                $runner = new $runner($request);
+                $runner = new $runner;
             }
             $runner->execute();
         } else {
@@ -192,13 +183,18 @@ class WaterPipe
         }
     }
 
-    private function _getActionForRoutes(array $routes, Request $request)
+    /**
+     * @param array $routes
+     * @return callable
+     * @throws Exceptions\RequestUriBuilderException
+     */
+    private function _getActionForRoutes(array $routes)
     {
         $runner = null;
 
         foreach ($routes as $pattern => $action) {
-            if (RequestUri::isMatch($pattern, $request->uri->getUri())) {
-                $request->uri->setPattern($pattern)->build();
+            if (RequestUri::isMatch($pattern, Request::getInstance()->uri->getUri())) {
+                Request::getInstance()->uri->setPattern($pattern)->build();
                 $runner = $action;
                 break;
             }

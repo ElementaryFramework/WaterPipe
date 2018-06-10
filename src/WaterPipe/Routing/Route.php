@@ -30,28 +30,54 @@
  * @link      http://waterpipe.na2axl.tk
  */
 
-namespace ElementaryFramework\WaterPipe\Routing\Middleware;
+namespace ElementaryFramework\WaterPipe\Routing;
 
 use ElementaryFramework\WaterPipe\HTTP\Request\Request;
+use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 
-abstract class Middleware
+abstract class Route
 {
+    /**
+     * @var string
+     */
+    protected $_uri = null;
+
     /**
      * @var Request
      */
     protected $_request;
 
     /**
-     * RouteAction constructor.
+     * @var Response
+     */
+    protected $_response;
+
+    /**
+     * Route constructor.
      *
      * @throws \Exception
      */
     public function __construct()
     {
-        $this->_request =& Request::getInstance();
+        $this->_request =& Request::capture();
+        $this->_response = new Response();
     }
 
-    public abstract function beforeExecute();
+    /**
+     * @return string
+     */
+    public function getUri(): string
+    {
+        return $this->_uri;
+    }
 
-    public abstract function afterExecute();
+    public abstract function request();
+
+    public abstract function get();
+
+    public abstract function post();
+
+    public abstract function put();
+
+    public abstract function delete();
 }

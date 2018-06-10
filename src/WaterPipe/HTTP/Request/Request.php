@@ -37,6 +37,11 @@ use ElementaryFramework\WaterPipe\Routing\Router;
 class Request
 {
     /**
+     * @var Request
+     */
+    private static $_instance = null;
+
+    /**
      * @var int
      */
     private $_method;
@@ -56,9 +61,24 @@ class Request
      */
     public $uri;
 
-    public function __construct()
+    /**
+     * Request constructor.
+     */
+    private function __construct()
     {
         $this->uri = new RequestUri();
+    }
+
+    /**
+     * @return Request
+     */
+    public static function &getInstance(): Request
+    {
+        static $instance;
+
+        $instance[0] = self::$_instance === null ? self::$_instance = new Request() : self::$_instance;
+
+        return $instance[0];
     }
 
     /**
@@ -114,10 +134,8 @@ class Request
      *
      * @return Request
      */
-    public static function capture(): Request
+    public static function &capture(): Request
     {
-        $router = new Router();
-
-        return $router->build()->getRequest();
+        return Router::getInstance()->build()->getRequest();
     }
 }
