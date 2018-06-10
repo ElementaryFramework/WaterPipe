@@ -49,6 +49,8 @@ class Router
      */
     private $_request;
 
+    private $_built = false;
+
     private function __construct()
     {
         $this->_request =& Request::getInstance();
@@ -65,8 +67,12 @@ class Router
 
     public function build()
     {
-        $this->_detectUri();
-        $this->_detectMethod();
+        if (!$this->_built) {
+            $this->_detectUri();
+            $this->_detectMethod();
+
+            $this->_built = true;
+        }
 
         return $this;
     }
@@ -140,6 +146,14 @@ class Router
         } else {
             $this->_request->setMethod(RequestMethod::UNKNOWN);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBuilt(): bool
+    {
+        return $this->_built;
     }
 
     /**
