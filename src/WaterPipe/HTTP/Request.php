@@ -32,6 +32,8 @@
 
 namespace ElementaryFramework\WaterPipe\HTTP;
 
+use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
+
 class Request
 {
     /**
@@ -50,9 +52,14 @@ class Request
     private $_body;
 
     /**
-     * @var string
+     * @var RequestUri
      */
-    private $_uri;
+    public $uri;
+
+    public function __construct()
+    {
+        $this->uri = new RequestUri();
+    }
 
     /**
      * @return int
@@ -100,21 +107,5 @@ class Request
     public function setBody(RequestData $body): void
     {
         $this->_body = $body;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUri(): string
-    {
-        return $this->_uri;
-    }
-
-    /**
-     * @param string $uri
-     */
-    public function setUri(string $uri): void
-    {
-        $this->_uri = $uri;
     }
 }
