@@ -85,14 +85,16 @@ class Router
             $_GET = array();
         }
 
+        $this->_request->setBody(new RequestData($_POST));
+
         if ($uri == '/' || empty($uri)) {
-            $this->_request->setUri('/');
+            $this->_request->uri->setUri('/');
             return;
         }
 
         $uri = parse_url($uri, PHP_URL_PATH);
 
-        $this->_request->setUri(str_replace(array('//', '../'), '/', trim($uri)));
+        $this->_request->uri->setUri(str_replace(array('//', '../'), '/', trim($uri)));
     }
 
     private function _detectMethod()
