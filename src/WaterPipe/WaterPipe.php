@@ -126,6 +126,8 @@ class WaterPipe
     {
         $this->_isRunning = true;
 
+        Request::capture();
+
         $this->_executeRequest();
     }
 
