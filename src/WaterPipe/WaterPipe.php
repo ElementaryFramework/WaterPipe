@@ -38,7 +38,6 @@ use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
 use ElementaryFramework\WaterPipe\Routing\Route;
-use ElementaryFramework\WaterPipe\Routing\Router;
 
 class WaterPipe
 {
@@ -113,15 +112,28 @@ class WaterPipe
      * This method have to be called AFTER the
      * definition of all routes. No routes will
      * be considered after the call of this method.
+     *
+     * @throws \Exception
      */
     public function run()
     {
+        $this->exec(Request::capture());
+    }
+
+    /**
+     * Execute a request with the current water pipe.
+     *
+     * This method have to be called AFTER the
+     * definition of all routes. No routes will
+     * be considered after the call of this method.
+     *
+     * @param Request $request The request to execute.
+     *
+     * @throws \Exception
+     */
+    public function exec(Request $request)
+    {
         $this->_isRunning = true;
-
-        $router = new Router();
-        $router->build();
-
-        $request = $router->getRequest();
 
         $this->_executeRequest($request);
     }
