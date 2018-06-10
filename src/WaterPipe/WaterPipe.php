@@ -184,21 +184,8 @@ class WaterPipe
         $runner = null;
 
         foreach ($routes as $pattern => $action) {
-            $key = str_replace(
-                ':any',
-                '.+',
-                str_replace(
-                    ':num',
-                    '[0-9]+',
-                    str_replace(
-                        ':str',
-                        '[a-zA-Z0-9-_\.]+',
-                        $pattern
-                    )
-                )
-            );
-
-            if (preg_match("#^{$key}\$#", $request->getUri(), $params)) {
+            if (Request\RequestUri::isMatch($pattern, $request->uri->getUri())) {
+                $request->uri->setPattern($pattern)->build();
                 $runner = $action;
                 break;
             }
