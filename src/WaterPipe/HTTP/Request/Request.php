@@ -32,6 +32,8 @@
 
 namespace ElementaryFramework\WaterPipe\HTTP\Request;
 
+use ElementaryFramework\WaterPipe\Routing\Router;
+
 class Request
 {
     /**
@@ -105,5 +107,17 @@ class Request
     public function setBody(RequestData $body): void
     {
         $this->_body = $body;
+    }
+
+    /**
+     * Captures the current request.
+     *
+     * @return Request
+     */
+    public static function capture(): Request
+    {
+        $router = new Router();
+
+        return $router->build()->getRequest();
     }
 }

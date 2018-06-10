@@ -53,6 +53,8 @@ class Router
     {
         $this->_detectUri();
         $this->_detectMethod();
+
+        return $this;
     }
 
     private function _detectUri()
