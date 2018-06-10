@@ -35,7 +35,7 @@ namespace ElementaryFramework\WaterPipe\Routing;
 use ElementaryFramework\WaterPipe\HTTP\Request\Request;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 
-abstract class Route
+abstract class RouteAction
 {
     /**
      * @var Request
@@ -48,7 +48,7 @@ abstract class Route
     protected $_response;
 
     /**
-     * Route constructor.
+     * RouteAction constructor.
      *
      * @param Request $request The request associated to this route.
      *

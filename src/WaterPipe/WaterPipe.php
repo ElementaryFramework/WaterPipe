@@ -37,7 +37,7 @@ use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
-use ElementaryFramework\WaterPipe\Routing\Route;
+use ElementaryFramework\WaterPipe\Routing\RouteAction;
 
 class WaterPipe
 {
@@ -182,7 +182,7 @@ class WaterPipe
         // NOTE: No code will normally not be executed after this block...
         if (is_callable($runner) || is_array($runner)) {
             call_user_func_array($runner, array($request, new Response()));
-        } elseif (is_subclass_of($runner, Route::class)) {
+        } elseif (is_subclass_of($runner, RouteAction::class)) {
             if (is_string($runner)) {
                 $runner = new $runner($request);
             }

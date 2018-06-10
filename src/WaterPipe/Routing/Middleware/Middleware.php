@@ -42,7 +42,7 @@ abstract class Middleware
     protected $_request;
 
     /**
-     * Route constructor.
+     * RouteAction constructor.
      *
      * @param Request $request The request associated to this route.
      *
