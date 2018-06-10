@@ -32,15 +32,15 @@
 
 namespace ElementaryFramework\WaterPipe\Routing;
 
-use ElementaryFramework\WaterPipe\HTTP\Request;
-use ElementaryFramework\WaterPipe\HTTP\RequestData;
-use ElementaryFramework\WaterPipe\HTTP\RequestMethod;
+use ElementaryFramework\WaterPipe\HTTP\Request\Request;
+use ElementaryFramework\WaterPipe\HTTP\Request\RequestData;
+use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
 use ElementaryFramework\WaterPipe\WaterPipeConfig;
 
 class Router
 {
     /**
-     * @var \ElementaryFramework\WaterPipe\HTTP\Request
+     * @var Request
      */
     private $_request;
 

@@ -32,18 +32,18 @@
 
 namespace ElementaryFramework\WaterPipe\Routing;
 
-use ElementaryFramework\WaterPipe\HTTP\Request;
-use ElementaryFramework\WaterPipe\HTTP\Response;
+use ElementaryFramework\WaterPipe\HTTP\Request\Request;
+use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 
 abstract class Route
 {
     /**
-     * @var \ElementaryFramework\WaterPipe\HTTP\Request
+     * @var Request
      */
     protected $_request;
 
     /**
-     * @var \ElementaryFramework\WaterPipe\HTTP\Response
+     * @var Response
      */
     protected $_response;
 

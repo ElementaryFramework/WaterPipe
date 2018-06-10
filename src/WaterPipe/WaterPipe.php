@@ -32,9 +32,10 @@
 
 namespace ElementaryFramework\WaterPipe;
 
-use ElementaryFramework\WaterPipe\HTTP\Request;
-use ElementaryFramework\WaterPipe\HTTP\RequestMethod;
-use ElementaryFramework\WaterPipe\HTTP\Response;
+use ElementaryFramework\WaterPipe\HTTP\Request\Request;
+use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
+use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
+use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
 use ElementaryFramework\WaterPipe\Routing\Route;
 use ElementaryFramework\WaterPipe\Routing\Router;
@@ -184,7 +185,7 @@ class WaterPipe
         $runner = null;
 
         foreach ($routes as $pattern => $action) {
-            if (Request\RequestUri::isMatch($pattern, $request->uri->getUri())) {
+            if (RequestUri::isMatch($pattern, $request->uri->getUri())) {
                 $request->uri->setPattern($pattern)->build();
                 $runner = $action;
                 break;

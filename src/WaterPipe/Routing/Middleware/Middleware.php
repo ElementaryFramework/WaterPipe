@@ -32,12 +32,12 @@
 
 namespace ElementaryFramework\WaterPipe\Routing\Middleware;
 
-use ElementaryFramework\WaterPipe\HTTP\Request;
+use ElementaryFramework\WaterPipe\HTTP\Request\Request;
 
 abstract class Middleware
 {
     /**
-     * @var \ElementaryFramework\WaterPipe\HTTP\Request
+     * @var Request
      */
     protected $_request;
 
