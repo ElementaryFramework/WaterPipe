@@ -83,7 +83,20 @@ class WaterPipe
             array_push($this->_middlewareRegistry, $plugin);
         } elseif ($plugin instanceof Route) {
             foreach (array("request", "get", "post", "put", "delete") as $method) {
-                call_user_func_array(array($this, $method), array($plugin->getUri(), array($plugin, $method)));
+                $this->$method($plugin->getUri(), array($plugin, $method));
+            }
+        } elseif ($plugin instanceof WaterPipe) {
+            foreach (array(
+                         "request" => $plugin->_requestRegistry,
+                         "get" => $plugin->_getRequestRegistry,
+                         "post" => $plugin->_postRequestRegistry,
+                         "put" => $plugin->_putRequestRegistry,
+                         "delete" => $plugin->_deleteRequestRegistry) as $method => $registry) {
+
+                foreach ($registry as $uri => $action) {
+                    $this->$method($uri, $action);
+                }
+
             }
         }
     }
