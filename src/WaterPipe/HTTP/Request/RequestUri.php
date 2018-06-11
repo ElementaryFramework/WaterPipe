@@ -79,7 +79,7 @@ class RequestUri implements \ArrayAccess
      */
     public function setUri(string $uri): RequestUri
     {
-        $this->_uri = $uri;
+        $this->_uri = "/" . trim($uri, "/");
         return $this;
     }
 
@@ -148,7 +148,7 @@ class RequestUri implements \ArrayAccess
     public static function isMatch(string $pattern, string $uri): bool
     {
         $pattern = self::pattern2regex($pattern);
-        return preg_match("#^{$pattern}\$#", $uri) != false;
+        return preg_match("#^{$pattern}\$#", "/" . trim($uri, "/")) != false;
     }
 
     private static function _getUriParams(string $pattern): array
