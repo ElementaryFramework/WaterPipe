@@ -115,7 +115,7 @@ class RequestUri implements \ArrayAccess
         if ($this->_pattern !== null && $this->_uri !== null) {
             $params = self::_getUriParams($this->_pattern);
 
-            $regex = self::_pattern2regex($this->_pattern);
+            $regex = self::pattern2regex($this->_pattern);
             preg_match("#^{$regex}\$#", $this->_uri, $values);
             array_shift($values);
 
@@ -147,7 +147,7 @@ class RequestUri implements \ArrayAccess
      */
     public static function isMatch(string $pattern, string $uri): bool
     {
-        $pattern = self::_pattern2regex($pattern);
+        $pattern = self::pattern2regex($pattern);
         return preg_match("#^{$pattern}\$#", $uri) != false;
     }
 
@@ -163,7 +163,7 @@ class RequestUri implements \ArrayAccess
         return array();
     }
 
-    private static function _pattern2regex(string $pattern): string
+    public static function pattern2regex(string $pattern): string
     {
         return preg_replace(self::URI_PARAM_PATTERN, "([a-zA-Z0-9-_\.]+)", $pattern);
     }
