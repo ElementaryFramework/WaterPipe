@@ -50,6 +50,13 @@ class WaterPipe
     private $_isRunning;
 
     /**
+     * The base URI of the pipe.
+     *
+     * @var string
+     */
+    private $_baseUri = "";
+
+    /**
      * The array of registered middleware.
      *
      * @var Middleware[]
@@ -65,6 +72,8 @@ class WaterPipe
 
     private $_errorsRegistry;
 
+    private $_pipesRegistry;
+
     public function __construct()
     {
         $this->_isRunning = false;
@@ -75,6 +84,7 @@ class WaterPipe
         $this->_deleteRequestRegistry = array();
         $this->_requestRegistry = array();
         $this->_errorsRegistry = array();
+        $this->_pipesRegistry = array();
     }
 
     public function use($plugin)
@@ -126,6 +136,11 @@ class WaterPipe
         $this->_deleteRequestRegistry[$uri] = $action;
     }
 
+    public function pipe(string $baseUri, WaterPipe $pipe)
+    {
+        $this->_pipesRegistry[$baseUri] = $pipe;
+    }
+
     /**
      * Run the water pipe.
      *
@@ -141,7 +156,30 @@ class WaterPipe
 
         Request::capture();
 
-        $this->_executeRequest();
+        $pipe = $this->_findSubPipe();
+
+        if ($pipe === null) {
+            $this->_executeRequest();
+        } else {
+            $pipe[1]->_runBase($pipe[0]);
+        }
+    }
+
+    private function _runBase(string $baseUri)
+    {
+        $this->_baseUri = $baseUri;
+        $this->run();
+    }
+
+    private function _findSubPipe()
+    {
+        foreach ($this->_pipesRegistry as $baseUri => $pipe) {
+            if (preg_match("#^" . RequestUri::pattern2regex($baseUri) . "#", Request::getInstance()->uri->getUri())) {
+                return array($baseUri, $pipe);
+            }
+        }
+
+        return null;
     }
 
     private function _executeRequest()
@@ -208,7 +246,7 @@ class WaterPipe
         $runner = null;
 
         foreach ($routes as $pattern => $action) {
-            if (RequestUri::isMatch($pattern, Request::getInstance()->uri->getUri())) {
+            if (RequestUri::isMatch($pattern = "/" . trim($this->_baseUri . $pattern, "/"), Request::getInstance()->uri->getUri())) {
                 Request::getInstance()->uri->setPattern($pattern)->build();
                 $runner = $action;
                 break;
