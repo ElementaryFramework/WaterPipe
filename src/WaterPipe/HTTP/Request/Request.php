@@ -130,6 +130,16 @@ class Request
     }
 
     /**
+     * Checks if the current request is from Ajax.
+     *
+     * @return bool
+     */
+    public function isAjax(): bool
+    {
+        return (!empty($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQUESTED_WITH"]) === "xmlhttprequest");
+    }
+
+    /**
      * Captures the current request.
      *
      * @return Request
