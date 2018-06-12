@@ -174,8 +174,8 @@ class WaterPipe
     private function _findSubPipe()
     {
         foreach ($this->_pipesRegistry as $baseUri => $pipe) {
-            if (preg_match("#^" . RequestUri::pattern2regex($baseUri) . "#", Request::getInstance()->uri->getUri())) {
-                return array($baseUri, $pipe);
+            if (preg_match("#^" . RequestUri::makeUri($this->_baseUri, RequestUri::pattern2regex($baseUri)) . "#", Request::getInstance()->uri->getUri())) {
+                return array(RequestUri::makeUri($this->_baseUri, $baseUri), $pipe);
             }
         }
 
@@ -246,7 +246,7 @@ class WaterPipe
         $runner = null;
 
         foreach ($routes as $pattern => $action) {
-            if (RequestUri::isMatch($pattern = "/" . trim($this->_baseUri . $pattern, "/"), Request::getInstance()->uri->getUri())) {
+            if (RequestUri::isMatch($pattern = RequestUri::makeUri($this->_baseUri, $pattern), Request::getInstance()->uri->getUri())) {
                 Request::getInstance()->uri->setPattern($pattern)->build();
                 $runner = $action;
                 break;

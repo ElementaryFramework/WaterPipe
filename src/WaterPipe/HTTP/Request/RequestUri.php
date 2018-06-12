@@ -168,6 +168,13 @@ class RequestUri implements \ArrayAccess
         return preg_replace(self::URI_PARAM_PATTERN, "([a-zA-Z0-9-_\.]+)", $pattern);
     }
 
+    public static function makeUri(...$parts)
+    {
+        $uri = implode("/", $parts);
+
+        return "/" . trim(preg_replace("#/+#", "/", $uri), "/");
+    }
+
     /**
      * Whether a offset exists
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
