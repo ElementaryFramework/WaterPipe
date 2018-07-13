@@ -57,6 +57,16 @@ class Request
     private $_body;
 
     /**
+     * @var RequestData
+     */
+    private $_cookies;
+
+    /**
+     * @var RequestHeader
+     */
+    private $_header;
+
+    /**
      * @var RequestUri
      */
     public $uri;
@@ -67,6 +77,21 @@ class Request
     private function __construct()
     {
         $this->uri = new RequestUri();
+
+        $this->_header = new RequestHeader();
+
+        foreach ($_SERVER as $key => $value) {
+            if (strpos($key, "HTTP_", 0) === 0) {
+                $parts = explode("_", $key);
+                array_shift($parts);
+
+                $headerName = implode("-", array_map(function ($name) {
+                    return ucfirst(strtolower($name));
+                }, $parts));
+
+                $this->_header[$headerName] = $value;
+            }
+        }
     }
 
     /**
@@ -127,6 +152,30 @@ class Request
     public function setBody(RequestData $body): void
     {
         $this->_body = $body;
+    }
+
+    /**
+     * @return RequestData
+     */
+    public function getCookies(): RequestData
+    {
+        return $this->_cookies;
+    }
+
+    /**
+     * @param RequestData $cookies
+     */
+    public function setCookies(RequestData $cookies): void
+    {
+        $this->_cookies = $cookies;
+    }
+
+    /**
+     * @return RequestHeader
+     */
+    public function getHeader(): RequestHeader
+    {
+        return $this->_header;
     }
 
     /**

@@ -103,9 +103,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      */
     public function offsetSet($offset, $value)
     {
-        if ($this->offsetExists($offset)) {
-            $this->_fields[$offset] = $value;
-        }
+        $this->_fields[$offset] = $value;
     }
 
     /**

@@ -101,13 +101,16 @@ class Router
         if (isset($parts[1]) && $config->isQueryStringEnabled()) {
             $_SERVER['QUERY_STRING'] = $parts[1];
             parse_str($_SERVER['QUERY_STRING'], $_GET);
-            $this->_request->setParams(new RequestData($_GET));
         } else {
             $_SERVER['QUERY_STRING'] = '';
             $_GET = array();
         }
 
+        $this->_request->setParams(new RequestData($_GET));
+
         $this->_request->setBody(new RequestData($_POST));
+
+        $this->_request->setCookies(new RequestData($_COOKIE));
 
         if ($uri == '/' || empty($uri)) {
             $this->_request->uri->setUri('/');
