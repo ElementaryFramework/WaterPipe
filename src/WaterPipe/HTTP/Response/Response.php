@@ -33,6 +33,7 @@
 namespace ElementaryFramework\WaterPipe\HTTP\Response;
 
 use ElementaryFramework\WaterPipe\Exceptions\FileNotFoundException;
+use ElementaryFramework\WaterPipe\WaterPipe;
 use ElementaryFramework\WaterPipe\WaterPipeConfig;
 
 class Response
@@ -69,6 +70,9 @@ class Response
      */
     public function send()
     {
+        // Execute middleware
+        WaterPipe::triggerBeforeSendEvent($this);
+
         // Set status code
         $code = $this->_status->getCode();
         $text = $this->_status->getDescription();

@@ -43,6 +43,14 @@ use ElementaryFramework\WaterPipe\Routing\RouteAction;
 class WaterPipe
 {
     /**
+     * Stores the only running instance
+     * of WaterPipe.
+     *
+     * @var WaterPipe
+     */
+    private static $_runningInstance = null;
+
+    /**
      * Defines if the pipe is running or not.
      *
      * @var bool
@@ -73,6 +81,40 @@ class WaterPipe
     private $_errorsRegistry;
 
     private $_pipesRegistry;
+
+    /**
+     * @return WaterPipe
+     */
+    public static function getRunningInstance(): WaterPipe
+    {
+        return self::$_runningInstance;
+    }
+
+    /**
+     * Triggers all middlewares with before send event
+     * defined on the running pipe.
+     *
+     * @param Response $response The response on which trigger the event.
+     */
+    public static function triggerBeforeSendEvent(Response &$response)
+    {
+        foreach (self::$_runningInstance->_middlewareRegistry as $middleware) {
+            $middleware->beforeSend($response);
+        }
+    }
+
+    /**
+     * Triggers all middlewares with before execute event
+     * defined on the running pipe.
+     *
+     * @param Request $request The request to execute.
+     */
+    public static function triggerBeforeExecuteEvent(Request &$request)
+    {
+        foreach (self::$_runningInstance->_middlewareRegistry as $middleware) {
+            $middleware->beforeExecute($request);
+        }
+    }
 
     public function __construct()
     {
@@ -154,6 +196,8 @@ class WaterPipe
     {
         $this->_isRunning = true;
 
+        self::$_runningInstance = $this;
+
         Request::capture();
 
         $pipe = $this->_findSubPipe();
@@ -165,12 +209,19 @@ class WaterPipe
         }
     }
 
+    /**
+     * @param string $baseUri
+     * @throws \Exception
+     */
     private function _runBase(string $baseUri)
     {
         $this->_baseUri = $baseUri;
         $this->run();
     }
 
+    /**
+     * @return array|null
+     */
     private function _findSubPipe()
     {
         foreach ($this->_pipesRegistry as $baseUri => $pipe) {
@@ -223,7 +274,15 @@ class WaterPipe
             throw new \Exception("404 Error");
         }
 
-        // NOTE: No code will normally not be executed after this block...
+        if (!is_callable($runner) && !is_array($runner) && !is_subclass_of($runner, RouteAction::class)) {
+            // TODO: Proper exception
+            throw new \Exception("Malformed route action");
+        }
+
+        // Execute middleware
+        self::triggerBeforeExecuteEvent(Request::getInstance());
+
+        // NOTE: No code will be executed after this block...
         if (is_callable($runner) || is_array($runner)) {
             call_user_func_array($runner, array(Request::getInstance(), new Response()));
         } elseif (is_subclass_of($runner, RouteAction::class)) {
@@ -231,14 +290,12 @@ class WaterPipe
                 $runner = new $runner;
             }
             $runner->execute();
-        } else {
-            throw new \Exception("Malformed route action");
         }
     }
 
     /**
      * @param array $routes
-     * @return callable
+     * @return callable|RouteAction
      * @throws Exceptions\RequestUriBuilderException
      */
     private function _getActionForRoutes(array $routes)

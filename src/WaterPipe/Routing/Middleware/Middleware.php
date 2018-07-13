@@ -33,25 +33,11 @@
 namespace ElementaryFramework\WaterPipe\Routing\Middleware;
 
 use ElementaryFramework\WaterPipe\HTTP\Request\Request;
+use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 
 abstract class Middleware
 {
-    /**
-     * @var Request
-     */
-    protected $_request;
+    public abstract function beforeExecute(Request &$request);
 
-    /**
-     * RouteAction constructor.
-     *
-     * @throws \Exception
-     */
-    public function __construct()
-    {
-        $this->_request =& Request::getInstance();
-    }
-
-    public abstract function beforeExecute();
-
-    public abstract function afterExecute();
+    public abstract function beforeSend(Response &$response);
 }
