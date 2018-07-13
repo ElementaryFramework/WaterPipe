@@ -44,12 +44,12 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      */
     private $_position = 0;
 
-    protected function setField(string $name, string $value)
+    public function setField(string $name, string $value)
     {
         $this->_fields[$name] = $value;
     }
 
-    protected function getField(string $name): string
+    public function getField(string $name): string
     {
         return $this->_fields[$name];
     }
