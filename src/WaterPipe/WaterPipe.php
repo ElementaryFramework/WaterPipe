@@ -39,7 +39,10 @@ use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
 use ElementaryFramework\WaterPipe\Routing\Route;
 use ElementaryFramework\WaterPipe\Routing\RouteAction;
+use ElementaryFramework\WaterPipe\Exceptions\NotFoundErrorException;
+use ElementaryFramework\WaterPipe\Exceptions\InternalServerErrorException;
 
+// TODO: Errors registry
 class WaterPipe
 {
     /**
@@ -52,7 +55,7 @@ class WaterPipe
 
     /**
      * Defines if the pipe is running or not.
-     *
+      *
      * @var bool
      */
     private $_isRunning;
@@ -71,15 +74,54 @@ class WaterPipe
      */
     private $_middlewareRegistry;
 
+    /**
+     * The array of registered get requests.
+     * 
+     * @var callable[]
+     */
     private $_getRequestRegistry;
+
+    /**
+     * The array of registered post requests.
+     * 
+     * @var callable[]
+     */
     private $_postRequestRegistry;
+
+    /**
+     * The array of registered put requests.
+     * 
+     * @var callable[]
+     */
     private $_putRequestRegistry;
+
+    /**
+     * The array of registered delete requests.
+     * 
+     * @var callable[]
+     */
     private $_deleteRequestRegistry;
 
+    /**
+     * The array of registered requests.
+     * 
+     * @var callable[]
+     */
     private $_requestRegistry;
 
+    /**
+     * The array of registered error
+     * handlers.
+     * 
+     * @var callable[]
+     */
     private $_errorsRegistry;
 
+    /**
+     * The array of sub pipes.
+     * 
+     * @var callable[]
+     */
     private $_pipesRegistry;
 
     /**
@@ -116,6 +158,9 @@ class WaterPipe
         }
     }
 
+    /**
+     * WaterPipe __constructor
+     */
     public function __construct()
     {
         $this->_isRunning = false;
@@ -129,6 +174,12 @@ class WaterPipe
         $this->_pipesRegistry = array();
     }
 
+    /**
+     * Register a plugin in this pipe.
+     * 
+     * @param MiddleWare|Route|WaterPipe $plugin The plugin to use (Middleware,
+     *                                           Route or another WaterPipe).
+     */
     public function use($plugin)
     {
         if ($plugin instanceof Middleware) {
@@ -153,34 +204,87 @@ class WaterPipe
         }
     }
 
+    /**
+     * Register a request handled by this pipe.
+     * 
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
     public function request(string $uri, $action)
     {
         $this->_requestRegistry[$uri] = $action;
     }
 
+    /**
+     * Register a GET request handled by this pipe.
+     * 
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
     public function get(string $uri, $action)
     {
         $this->_getRequestRegistry[$uri] = $action;
     }
 
+    /**
+     * Register a POST request handled by this pipe.
+     * 
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
     public function post(string $uri, $action)
     {
         $this->_postRequestRegistry[$uri] = $action;
     }
 
+    /**
+     * Register a PUT request handled by this pipe.
+     * 
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
     public function put(string $uri, $action)
     {
         $this->_putRequestRegistry[$uri] = $action;
     }
 
+    /**
+     * Register a DELETE request handled by this pipe.
+     * 
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
     public function delete(string $uri, $action)
     {
         $this->_deleteRequestRegistry[$uri] = $action;
     }
 
+    /**
+     * Register a sub pipe managed by this pipe.
+     * 
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
     public function pipe(string $baseUri, WaterPipe $pipe)
     {
         $this->_pipesRegistry[$baseUri] = $pipe;
+    }
+
+    /**
+     * Register a error handler for this pipe.
+     * 
+     * @param int      $code   The error code.
+     * @param callable $action The action to call when an error of this code appear.
+     */
+    public function error(int $code, $action)
+    {
+        $this->_errorsRegistry[$code] = $action;
     }
 
     /**
@@ -239,8 +343,9 @@ class WaterPipe
 
         switch (Request::getInstance()->getMethod()) {
             case RequestMethod::UNKNOWN:
-                // TODO: 500 Internal Server Error. Unable to determine the request method.
-                throw new \Exception("500 Error");
+                if (isset($this->_errorsRegistry[500]))
+                    return $this->_executeAction($this->_errorsRegistry[500]);
+                else throw new InternalServerErrorException();
 
             case RequestMethod::GET:
                 $registry = $this->_getRequestRegistry;
@@ -270,8 +375,9 @@ class WaterPipe
         }
 
         if ($runner === null) {
-            // TODO: 404 Not Found Error. Unable to find a route for this URI.
-            throw new \Exception("404 Error");
+            if (isset($this->_errorsRegistry[404]))
+                return $this->_executeAction($this->_errorsRegistry[404]);
+            else throw new NotFoundErrorException();
         }
 
         if (!is_callable($runner) && !is_array($runner) && !is_subclass_of($runner, RouteAction::class)) {
@@ -282,7 +388,12 @@ class WaterPipe
         // Execute middleware
         self::triggerBeforeExecuteEvent(Request::getInstance());
 
-        // NOTE: No code will be executed after this block...
+        // NOTE: No code will be executed after this call...
+        $this->_executeAction($runner);
+    }
+
+    private function _executeAction($runner)
+    {
         if (is_callable($runner) || is_array($runner)) {
             call_user_func_array($runner, array(Request::getInstance(), new Response()));
         } elseif (is_subclass_of($runner, RouteAction::class)) {
