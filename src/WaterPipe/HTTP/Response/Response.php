@@ -97,11 +97,14 @@ class Response
     }
 
     /**
-     * @param string $body
-     * @param int $status
+     * Sends an HTML string.
+     * 
+     * @param string $body   The HTML string.
+     * @param int    $status The status code.
+     * 
      * @throws \Exception
      */
-    public function sendHtml(string $body, int $status = 200)
+    public function sendHtml(string $body, int $status = ResponseStatus::OkCode)
     {
         $config = WaterPipeConfig::get();
 
@@ -113,8 +116,11 @@ class Response
     }
 
     /**
-     * @param string $body
-     * @param int $status
+     * Send a JSON string.
+     * 
+     * @param string $body   The JSON string.
+     * @param int    $status The status code.
+     * 
      * @throws \Exception
      */
     public function sendJsonString(string $body, int $status = 200)
@@ -129,8 +135,11 @@ class Response
     }
 
     /**
-     * @param array $json
-     * @param int $status
+     * Send an array encoded to JSON.
+     * 
+     * @param array $json   The JSON array.
+     * @param int   $status The status code.
+     * 
      * @throws \Exception
      */
     public function sendJson(array $json, int $status = 200)
@@ -139,8 +148,11 @@ class Response
     }
 
     /**
-     * @param string $body
-     * @param int $status
+     * Send a raw string.
+     * 
+     * @param string $body   The raw string.
+     * @param int    $status The status code.
+     * 
      * @throws \Exception
      */
     public function sendText(string $body, int $status = 200)
@@ -155,10 +167,14 @@ class Response
     }
 
     /**
-     * @param string $path
-     * @param int $status
-     * @param string|null $mime
+     * Send a file content.
+     * 
+     * @param string      $path   The path to the file.
+     * @param int         $status The status code.
+     * @param string|null $mime   The file's MIME type.
+     * 
      * @throws \Exception
+     * @throws FileNotFoundException When the file was not found at the given path.
      */
     public function sendFile(string $path, int $status = 200, string $mime = null)
     {
@@ -181,26 +197,44 @@ class Response
     }
 
     /**
-     * @param string $body
+     * Set the response body.
+     * 
+     * @param string $body The body.
+     * 
+     * @return self For chain calls.
      */
-    public function setBody(string $body): void
+    public function setBody(string $body): self
     {
         $this->_body = $body;
+
+        return $this;
     }
 
     /**
-     * @param ResponseStatus $status
+     * Set the response status.
+     * 
+     * @param ResponseStatus $status The status code.
+     * 
+     * @return self For chain calls.
      */
-    public function setStatus(ResponseStatus $status): void
+    public function setStatus(ResponseStatus $status): self
     {
         $this->_status = $status;
+
+        return $this;
     }
 
     /**
-     * @param ResponseHeader $header
+     * Set the response header.
+     * 
+     * @param ResponseHeader $header The response header object.
+     * 
+     * @return self For chain calls.
      */
-    public function setHeader(ResponseHeader $header): void
+    public function setHeader(ResponseHeader $header): self
     {
         $this->_header = $header;
+
+        return $this;
     }
 }
