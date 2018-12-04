@@ -55,12 +55,15 @@ abstract class Route
     /**
      * Route constructor.
      *
+     * @param string $uri The URI handled by this Route
+     *
      * @throws \Exception
      */
-    public function __construct()
+    public function __construct(string $uri)
     {
         $this->_request =& Request::capture();
         $this->_response = new Response();
+        $this->_uri = $uri;
     }
 
     /**
