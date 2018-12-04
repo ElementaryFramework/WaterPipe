@@ -54,7 +54,7 @@ abstract class RouteAction
      */
     public function __construct()
     {
-        $this->_request =& Request::getInstance();
+        $this->_request =& Request::capture();
         $this->_response = new Response();
     }
 
