@@ -86,7 +86,11 @@ class Response
 
         // Set headers
         foreach ($this->_header as $key => $value) {
-            header("{$key}: {$value}", true, $code);
+            if ($key === "Location") {
+                header("{$key}: {$value}");
+            } else {
+                header("{$key}: {$value}", true, $code);
+            }
         }
 
         // Send body
@@ -98,10 +102,10 @@ class Response
 
     /**
      * Sends an HTML string.
-     * 
+     *
      * @param string $body   The HTML string.
      * @param int    $status The status code.
-     * 
+     *
      * @throws \Exception
      */
     public function sendHtml(string $body, int $status = ResponseStatus::OkCode)
@@ -117,10 +121,10 @@ class Response
 
     /**
      * Send a JSON string.
-     * 
+     *
      * @param string $body   The JSON string.
      * @param int    $status The status code.
-     * 
+     *
      * @throws \Exception
      */
     public function sendJsonString(string $body, int $status = 200)
@@ -136,10 +140,10 @@ class Response
 
     /**
      * Send an array encoded to JSON.
-     * 
+     *
      * @param array $json   The JSON array.
      * @param int   $status The status code.
-     * 
+     *
      * @throws \Exception
      */
     public function sendJson(array $json, int $status = 200)
@@ -149,10 +153,10 @@ class Response
 
     /**
      * Send a raw string.
-     * 
+     *
      * @param string $body   The raw string.
      * @param int    $status The status code.
-     * 
+     *
      * @throws \Exception
      */
     public function sendText(string $body, int $status = 200)
@@ -168,11 +172,11 @@ class Response
 
     /**
      * Send a file content.
-     * 
+     *
      * @param string      $path   The path to the file.
      * @param int         $status The status code.
      * @param string|null $mime   The file's MIME type.
-     * 
+     *
      * @throws \Exception
      * @throws FileNotFoundException When the file was not found at the given path.
      */
@@ -198,9 +202,9 @@ class Response
 
     /**
      * Set the response body.
-     * 
+     *
      * @param string $body The body.
-     * 
+     *
      * @return self For chain calls.
      */
     public function setBody(string $body): self
@@ -212,9 +216,9 @@ class Response
 
     /**
      * Set the response status.
-     * 
+     *
      * @param ResponseStatus $status The status code.
-     * 
+     *
      * @return self For chain calls.
      */
     public function setStatus(ResponseStatus $status): self
@@ -226,9 +230,9 @@ class Response
 
     /**
      * Set the response header.
-     * 
+     *
      * @param ResponseHeader $header The response header object.
-     * 
+     *
      * @return self For chain calls.
      */
     public function setHeader(ResponseHeader $header): self
