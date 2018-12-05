@@ -119,7 +119,35 @@ class RequestUri implements \ArrayAccess
             preg_match("#^{$regex}\$#", $this->_uri, $values);
             array_shift($values);
 
-            $this->_params = array_combine($params, $values);
+            if (count($params) > 0) {
+                if (count($params) < count($values)) {
+                    $parts = explode("/", trim($this->_pattern, "/"));
+                    $pos = array();
+                    $count = 0;
+
+                    foreach ($parts as $key => $value) {
+                        if (!empty($value)) {
+                            if (preg_match("#^([a-zA-Z0-9-_\.]+)$#", $value)) {
+                                continue;
+                            } else {
+                                if (in_array(trim($value, ":"), $params, true)) {
+                                    $pos[$count] = trim($value, ":");
+                                } else {
+                                    $pos[$count] = $count;
+                                }
+
+                                $count++;
+                            }
+                        }
+                    }
+
+                    $params = $pos;
+                }
+
+                $this->_params = array_combine($params, $values);
+            } else {
+                $this->_params = $values;
+            }
 
             $this->_built = true;
         } else {
