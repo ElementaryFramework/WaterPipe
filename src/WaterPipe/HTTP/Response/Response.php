@@ -196,7 +196,7 @@ class Response
 
             $this->send();
         } else {
-            throw new FileNotFoundException("Cannot find the file at path: '{$path}'");
+            throw new FileNotFoundException($path);
         }
     }
 

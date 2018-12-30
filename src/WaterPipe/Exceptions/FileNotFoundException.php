@@ -34,5 +34,8 @@ namespace ElementaryFramework\WaterPipe\Exceptions;
 
 class FileNotFoundException extends \Exception
 {
-
+    public function __construct(string $path)
+    {
+        parent::__construct("Cannot find the file at the path \"{$path}\"");
+    }
 }
