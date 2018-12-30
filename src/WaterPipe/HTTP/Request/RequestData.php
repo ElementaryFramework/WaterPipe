@@ -32,6 +32,13 @@
 
 namespace ElementaryFramework\WaterPipe\HTTP\Request;
 
+/**
+ * Request Data
+ *
+ * Stores the set of parameters bundled with a request.
+ *
+ * @author     Axel Nana <ax.lnana@outlook.com>
+ */
 class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Serializable, \SeekableIterator
 {
     /**
@@ -49,7 +56,8 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     private $_position = 0;
 
     /**
-     * RequestParameters constructor.
+     * RequestData constructor.
+     *
      * @param array $params The array of parameters.
      */
     public function __construct(array $params = array())
@@ -58,30 +66,28 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
+     *
+     * @param mixed $offset An offset to check for.
+     *
+     * @return bool true on success or false on failure. The return value will
+     *              be casted to boolean if non-boolean was returned.
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->_parameters);
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @since 5.0.0
+     *
+     * @param mixed $offset The offset to retrieve.
+     *
+     * @return mixed
      */
     public function offsetGet($offset)
     {
@@ -93,18 +99,16 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     }
 
     /**
-     * Offset to set
+     * Offset to set.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
+     *
+     * @param mixed $offset The offset to assign the value to.
+     * @param mixed $value The value to set.
+     *
      * @return void
-     * @since 5.0.0
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($this->offsetExists($offset)) {
             $this->_parameters[$offset] = $value;
@@ -112,15 +116,15 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
+     *
+     * @param mixed $offset The offset to unset.
+     *
      * @return void
-     * @since 5.0.0
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if ($this->offsetExists($offset)) {
             unset($this->_parameters[$offset]);
@@ -128,10 +132,11 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     }
 
     /**
-     * Return the current element
+     * Return the current element.
+     *
      * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
-     * @since 5.0.0
+     *
+     * @return mixed
      */
     public function current()
     {
@@ -141,21 +146,23 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     }
 
     /**
-     * Move forward to next element
+     * Move forward to next element.
+     *
      * @link http://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
-     * @since 5.0.0
+     *
+     * @return void
      */
-    public function next()
+    public function next(): void
     {
         $this->_position++;
     }
 
     /**
-     * Return the key of the current element
+     * Return the key of the current element.
+     *
      * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
-     * @since 5.0.0
+     *
+     * @return mixed Scalar on success, or null on failure.
      */
     public function key()
     {
@@ -165,73 +172,77 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     }
 
     /**
-     * Checks if current position is valid
+     * Checks if current position is valid.
+     *
      * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
-     * @since 5.0.0
+     *
+     * @return bool The return value will be casted to boolean and then evaluated.
+     *              Returns true on success or false on failure.
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->_position < count($this->_parameters);
     }
 
     /**
-     * Rewind the Iterator to the first element
+     * Rewind the Iterator to the first element.
+     *
      * @link http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
-     * @since 5.0.0
+     *
+     * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->_position = 0;
     }
 
     /**
-     * Seeks to a position
+     * Seeks to a position.
+     *
      * @link http://php.net/manual/en/seekableiterator.seek.php
-     * @param int $position <p>
-     * The position to seek to.
-     * </p>
+     *
+     * @param int $position The position to seek to.
+     *
      * @return void
-     * @since 5.1.0
      */
-    public function seek($position)
+    public function seek(int $position): void
     {
         $this->_position = $position;
     }
 
     /**
-     * String representation of object
+     * String representation of object.
+     *
      * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
+     *
+     * @return string The string representation of the object or null
      */
-    public function serialize()
+    public function serialize(): string
     {
         return $this->jsonSerialize();
     }
 
     /**
-     * Constructs the object
+     * Constructs the object.
+     *
      * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
+     *
+     * @param string $serialized The string representation of the object.
+     *
      * @return void
-     * @since 5.1.0
      */
-    public function unserialize($serialized)
+    public function unserialize(string $serialized): void
     {
         $this->_parameters = json_decode($serialized, true);
     }
 
     /**
-     * Specify data which should be serialized to JSON
+     * Specify data which should be serialized to JSON.
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     *
+     * @return mixed Data which can be serialized by json_encode, which is a
+     *               value of any type other than a resource.
      */
     public function jsonSerialize()
     {
@@ -239,15 +250,14 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     }
 
     /**
-     * Count elements of an object
+     * Count elements of an object.
+     *
      * @link http://php.net/manual/en/countable.count.php
+     *
      * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
-     * @since 5.1.0
+     *             The return value is cast to an integer.
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_parameters);
     }
