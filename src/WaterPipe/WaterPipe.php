@@ -76,35 +76,35 @@ class WaterPipe
 
     /**
      * The array of registered get requests.
-     * 
+     *
      * @var callable[]
      */
     private $_getRequestRegistry;
 
     /**
      * The array of registered post requests.
-     * 
+     *
      * @var callable[]
      */
     private $_postRequestRegistry;
 
     /**
      * The array of registered put requests.
-     * 
+     *
      * @var callable[]
      */
     private $_putRequestRegistry;
 
     /**
      * The array of registered delete requests.
-     * 
+     *
      * @var callable[]
      */
     private $_deleteRequestRegistry;
 
     /**
      * The array of registered requests.
-     * 
+     *
      * @var callable[]
      */
     private $_requestRegistry;
@@ -112,14 +112,14 @@ class WaterPipe
     /**
      * The array of registered error
      * handlers.
-     * 
+     *
      * @var callable[]
      */
     private $_errorsRegistry;
 
     /**
      * The array of sub pipes.
-     * 
+     *
      * @var callable[]
      */
     private $_pipesRegistry;
@@ -176,7 +176,7 @@ class WaterPipe
 
     /**
      * Register a plugin in this pipe.
-     * 
+     *
      * @param MiddleWare|Route|WaterPipe $plugin The plugin to use (Middleware,
      *                                           Route or another WaterPipe).
      */
@@ -194,6 +194,7 @@ class WaterPipe
                          "get" => $plugin->_getRequestRegistry,
                          "post" => $plugin->_postRequestRegistry,
                          "put" => $plugin->_putRequestRegistry,
+                         "error" => $plugin->_errorsRegistry,
                          "delete" => $plugin->_deleteRequestRegistry) as $method => $registry) {
 
                 foreach ($registry as $uri => $action) {
@@ -206,7 +207,7 @@ class WaterPipe
 
     /**
      * Register a request handled by this pipe.
-     * 
+     *
      * @param string   $uri    The request URI.
      * @param callable $action The action to call when the request
      *                         correspond to the given  URI.
@@ -218,7 +219,7 @@ class WaterPipe
 
     /**
      * Register a GET request handled by this pipe.
-     * 
+     *
      * @param string   $uri    The request URI.
      * @param callable $action The action to call when the request
      *                         correspond to the given  URI.
@@ -230,7 +231,7 @@ class WaterPipe
 
     /**
      * Register a POST request handled by this pipe.
-     * 
+     *
      * @param string   $uri    The request URI.
      * @param callable $action The action to call when the request
      *                         correspond to the given  URI.
@@ -242,7 +243,7 @@ class WaterPipe
 
     /**
      * Register a PUT request handled by this pipe.
-     * 
+     *
      * @param string   $uri    The request URI.
      * @param callable $action The action to call when the request
      *                         correspond to the given  URI.
@@ -254,7 +255,7 @@ class WaterPipe
 
     /**
      * Register a DELETE request handled by this pipe.
-     * 
+     *
      * @param string   $uri    The request URI.
      * @param callable $action The action to call when the request
      *                         correspond to the given  URI.
@@ -266,7 +267,7 @@ class WaterPipe
 
     /**
      * Register a sub pipe managed by this pipe.
-     * 
+     *
      * @param string   $uri    The request URI.
      * @param callable $action The action to call when the request
      *                         correspond to the given  URI.
@@ -278,7 +279,7 @@ class WaterPipe
 
     /**
      * Register a error handler for this pipe.
-     * 
+     *
      * @param int      $code   The error code.
      * @param callable $action The action to call when an error of this code appear.
      */
@@ -309,6 +310,11 @@ class WaterPipe
         if ($pipe === null) {
             $this->_executeRequest();
         } else {
+            // Propagate errors registry only
+            foreach ($this->_errorsRegistry as $code => $action)
+                if (!isset($pipe[1]->_errorsRegistry[$code]))
+                    $pipe[1]->_errorsRegistry[$code] = $action;
+
             $pipe[1]->_runBase($pipe[0]);
         }
     }
@@ -328,7 +334,7 @@ class WaterPipe
      */
     private function _findSubPipe()
     {
-        foreach ($this->_pipesRegistry as $baseUri => $pipe) {
+        foreach ($this->_pipesRegistry as $baseUri => &$pipe) {
             if (preg_match("#^" . RequestUri::makeUri($this->_baseUri, RequestUri::pattern2regex($baseUri)) . "#", Request::getInstance()->uri->getUri())) {
                 return array(RequestUri::makeUri($this->_baseUri, $baseUri), $pipe);
             }
