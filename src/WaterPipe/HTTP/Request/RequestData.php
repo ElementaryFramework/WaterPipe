@@ -205,7 +205,7 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
      *
      * @return void
      */
-    public function seek(int $position): void
+    public function seek($position): void
     {
         $this->_position = $position;
     }
@@ -231,7 +231,7 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
      *
      * @return void
      */
-    public function unserialize(string $serialized): void
+    public function unserialize($serialized): void
     {
         $this->_parameters = json_decode($serialized, true);
     }
