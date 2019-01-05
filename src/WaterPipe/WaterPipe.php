@@ -310,10 +310,15 @@ class WaterPipe
         if ($pipe === null) {
             $this->_executeRequest();
         } else {
-            // Propagate errors registry only
+            // Propagate errors registry
             foreach ($this->_errorsRegistry as $code => $action)
                 if (!isset($pipe[1]->_errorsRegistry[$code]))
-                    $pipe[1]->_errorsRegistry[$code] = $action;
+                    $pipe[1]->error($code, $action);
+
+            // Propagate middlewares registry
+            foreach ($this->_middlewareRegistry as $middleware)
+                if (!in_array($middleware, $pipe[1]->_middlewareRegistry))
+                    $pipe[1]->use($middleware);
 
             $pipe[1]->_runBase($pipe[0]);
         }
@@ -345,6 +350,9 @@ class WaterPipe
 
     private function _executeRequest()
     {
+        // Execute middleware
+        self::triggerBeforeExecuteEvent(Request::getInstance());
+
         $registry = null;
 
         switch (Request::getInstance()->getMethod()) {
@@ -390,9 +398,6 @@ class WaterPipe
             // TODO: Proper exception
             throw new \Exception("Malformed route action");
         }
-
-        // Execute middleware
-        self::triggerBeforeExecuteEvent(Request::getInstance());
 
         // NOTE: No code will be executed after this call...
         $this->_executeAction($runner);
