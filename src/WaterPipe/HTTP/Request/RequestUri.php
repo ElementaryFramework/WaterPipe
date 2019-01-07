@@ -37,9 +37,9 @@ use ElementaryFramework\WaterPipe\Exceptions\RequestUriBuilderException;
 class RequestUri implements \ArrayAccess
 {
     /**
-     * @type string
+     * @var string
      */
-    private const URI_PARAM_PATTERN = "#:(\w+)#";
+    private const URI_PARAM_PATTERN = "/:(\w+)/";
 
     /**
      * @var string
@@ -60,6 +60,18 @@ class RequestUri implements \ArrayAccess
      * @var bool
      */
     private $_built = false;
+
+    /**
+     * Checks if the this URI is equal tu the given one.
+     *
+     * @param string $uri The URI to compare with this instance.
+     *
+     * @return bool
+     */
+    public function is(string $uri): bool
+    {
+        return strtolower(trim($this->_uri, "/")) === strtolower(trim($uri, "/"));
+    }
 
     /**
      * @param string $pattern
