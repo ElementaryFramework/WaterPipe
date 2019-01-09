@@ -176,6 +176,16 @@ class ResponseStatus
     }
 
     /**
+     * Returns the string representation of this instance.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return "{$this->_code} {$this->_description}";
+    }
+
+    /**
      * @return int
      */
     public function getCode(): int
