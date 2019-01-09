@@ -241,4 +241,34 @@ class Response
 
         return $this;
     }
+
+    /**
+     * Get the response body.
+     *
+     * @return string
+     */
+    public function getBody(): string
+    {
+        return $this->_body;
+    }
+
+    /**
+     * Get the response status.
+     *
+     * @return ResponseStatus
+     */
+    public function getStatus(): ResponseStatus
+    {
+        return $this->_status;
+    }
+
+    /**
+     * Get the response header.
+     *
+     * @return ResponseHeader
+     */
+    public function getHeader(): ResponseHeader
+    {
+        return $this->_header;
+    }
 }
