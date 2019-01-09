@@ -268,9 +268,8 @@ class WaterPipe
     /**
      * Register a sub pipe managed by this pipe.
      *
-     * @param string   $uri    The request URI.
-     * @param callable $action The action to call when the request
-     *                         correspond to the given  URI.
+     * @param string    $baseUri  The request URI.
+     * @param WaterPipe $pipe     The pipe to run within the given base URI.
      */
     public function pipe(string $baseUri, WaterPipe $pipe)
     {
@@ -350,57 +349,64 @@ class WaterPipe
 
     private function _executeRequest()
     {
-        // Execute middleware
-        self::triggerBeforeExecuteEvent(Request::getInstance());
+        try
+        {
+            // Execute middleware
+            self::triggerBeforeExecuteEvent(Request::getInstance());
 
-        $registry = null;
+            $registry = null;
 
-        switch (Request::getInstance()->getMethod()) {
-            case RequestMethod::UNKNOWN:
-                if (isset($this->_errorsRegistry[500]))
-                    return $this->_executeAction($this->_errorsRegistry[500]);
-                else throw new InternalServerErrorException();
+            switch (Request::getInstance()->getMethod()) {
+                case RequestMethod::UNKNOWN:
+                    if (isset($this->_errorsRegistry[500]))
+                        return $this->_executeAction($this->_errorsRegistry[500]);
+                    else throw new InternalServerErrorException();
 
-            case RequestMethod::GET:
-                $registry = $this->_getRequestRegistry;
-                break;
+                case RequestMethod::GET:
+                    $registry = $this->_getRequestRegistry;
+                    break;
 
-            case RequestMethod::POST:
-                $registry = $this->_postRequestRegistry;
-                break;
+                case RequestMethod::POST:
+                    $registry = $this->_postRequestRegistry;
+                    break;
 
-            case RequestMethod::PUT:
-                $registry = $this->_putRequestRegistry;
-                break;
+                case RequestMethod::PUT:
+                    $registry = $this->_putRequestRegistry;
+                    break;
 
-            case RequestMethod::DELETE:
-                $registry = $this->_deleteRequestRegistry;
-                break;
+                case RequestMethod::DELETE:
+                    $registry = $this->_deleteRequestRegistry;
+                    break;
+            }
+
+            if ($registry === null) {
+                throw new \Exception("Cannot handle a request of this type");
+            }
+
+            $runner = $this->_getActionForRoutes($registry);
+
+            if ($runner === null) {
+                $runner = $this->_getActionForRoutes($this->_requestRegistry);
+            }
+
+            if ($runner === null) {
+                if (isset($this->_errorsRegistry[404]))
+                    return $this->_executeAction($this->_errorsRegistry[404]);
+                else throw new NotFoundErrorException();
+            }
+
+            if (!is_callable($runner) && !is_array($runner) && !is_subclass_of($runner, RouteAction::class)) {
+                // TODO: Proper exception
+                throw new \Exception("Malformed route action");
+            }
+
+            // NOTE: No code will be executed after this call...
+            $this->_executeAction($runner);
+        } catch (\Exception $e) {
+            if (isset($this->_errorsRegistry[500]))
+                $this->_executeAction($this->_errorsRegistry[500]);
+            else throw $e;
         }
-
-        if ($registry === null) {
-            throw new \Exception("Cannot handle a request of this type");
-        }
-
-        $runner = $this->_getActionForRoutes($registry);
-
-        if ($runner === null) {
-            $runner = $this->_getActionForRoutes($this->_requestRegistry);
-        }
-
-        if ($runner === null) {
-            if (isset($this->_errorsRegistry[404]))
-                return $this->_executeAction($this->_errorsRegistry[404]);
-            else throw new NotFoundErrorException();
-        }
-
-        if (!is_callable($runner) && !is_array($runner) && !is_subclass_of($runner, RouteAction::class)) {
-            // TODO: Proper exception
-            throw new \Exception("Malformed route action");
-        }
-
-        // NOTE: No code will be executed after this call...
-        $this->_executeAction($runner);
     }
 
     private function _executeAction($runner)
