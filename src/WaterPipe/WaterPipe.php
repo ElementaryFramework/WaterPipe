@@ -26,7 +26,7 @@
  * @author    Axel Nana <ax.lnana@outlook.com>
  * @copyright 2018 Aliens Group, Inc.
  * @license   MIT <https://github.com/ElementaryFramework/WaterPipe/blob/master/LICENSE>
- * @version   0.0.1
+ * @version   1.1.0
  * @link      http://waterpipe.na2axl.tk
  */
 
@@ -42,7 +42,6 @@ use ElementaryFramework\WaterPipe\Routing\RouteAction;
 use ElementaryFramework\WaterPipe\Exceptions\NotFoundErrorException;
 use ElementaryFramework\WaterPipe\Exceptions\InternalServerErrorException;
 
-// TODO: Errors registry
 class WaterPipe
 {
     /**
