@@ -33,7 +33,7 @@ $root->get("/", function (Request $req, Response $res) {
 
 // Add a new route to the pipe with HTTP GET method (the login page)
 $root->get("/login", function (Request $req, Response $res) {
-    $res->sendFile("./pages/login.html", ResponseStatus:OkCode);
+    $res->sendFile("./pages/login.html", ResponseStatus::OkCode);
 });
 
 // Add a new route to the pipe with HTTP POST method (the login page form validation)
@@ -80,8 +80,8 @@ $root->get("/members/:username", function (Request $req, Response $res) {
 });
 
 // Add a new HTTP error handler (the 404 Not Found Error)
-$root->error(ResponseStatus:NotFoundCode, function (Request $req, Response $res) {
-    $res->sendText("404 Error: Not Found.", ResponseStatus:NotFoundCode);
+$root->error(ResponseStatus::NotFoundCode, function (Request $req, Response $res) {
+    $res->sendText("404 Error: Not Found.", ResponseStatus::NotFoundCode);
 });
 
 // Finally... Run the pipe
