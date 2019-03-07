@@ -35,6 +35,7 @@ namespace ElementaryFramework\WaterPipe\HTTP\Request;
 use ElementaryFramework\WaterPipe\Exceptions\UnsupportedRequestMethodException;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\HTTP\Response\ResponseHeader;
+use ElementaryFramework\WaterPipe\HTTP\Response\ResponseStatus;
 use ElementaryFramework\WaterPipe\Routing\Router;
 
 class Request
@@ -227,6 +228,16 @@ class Request
                 \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
                 break;
 
+            case RequestMethod::DELETE:
+                \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
+                break;
+
+            case RequestMethod::PUT:
+                \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
+                break;
+
             default:
                 throw new UnsupportedRequestMethodException();
         }
@@ -237,6 +248,7 @@ class Request
         $response = new Response();
         $response->setHeader($headers);
         $response->setBody($data);
+        $response->setStatus(new ResponseStatus(intval(curl_getinfo($curl, CURLINFO_HTTP_CODE))));
 
         return $response;
     }
