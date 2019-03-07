@@ -32,6 +32,8 @@
 
 namespace ElementaryFramework\WaterPipe;
 
+use ElementaryFramework\WaterPipe\Exceptions\InternalServerErrorException;
+use ElementaryFramework\WaterPipe\Exceptions\NotFoundErrorException;
 use ElementaryFramework\WaterPipe\HTTP\Request\Request;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
@@ -39,8 +41,6 @@ use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
 use ElementaryFramework\WaterPipe\Routing\Route;
 use ElementaryFramework\WaterPipe\Routing\RouteAction;
-use ElementaryFramework\WaterPipe\Exceptions\NotFoundErrorException;
-use ElementaryFramework\WaterPipe\Exceptions\InternalServerErrorException;
 
 class WaterPipe
 {
@@ -54,7 +54,7 @@ class WaterPipe
 
     /**
      * Defines if the pipe is running or not.
-      *
+     *
      * @var bool
      */
     private $_isRunning;
@@ -338,7 +338,7 @@ class WaterPipe
     private function _findSubPipe()
     {
         foreach ($this->_pipesRegistry as $baseUri => &$pipe) {
-            if (preg_match("#^" . RequestUri::makeUri($this->_baseUri, RequestUri::pattern2regex($baseUri)) . "#", Request::getInstance()->uri->getUri())) {
+            if (preg_match("#^" . RequestUri::makeUri($this->_baseUri, RequestUri::pattern2regex($baseUri)) . "#", Request::capture()->uri->getUri())) {
                 return array(RequestUri::makeUri($this->_baseUri, $baseUri), $pipe);
             }
         }
@@ -348,14 +348,13 @@ class WaterPipe
 
     private function _executeRequest()
     {
-        try
-        {
+        try {
             // Execute middleware
-            self::triggerBeforeExecuteEvent(Request::getInstance());
+            self::triggerBeforeExecuteEvent(Request::capture());
 
             $registry = null;
 
-            switch (Request::getInstance()->getMethod()) {
+            switch (Request::capture()->getMethod()) {
                 case RequestMethod::UNKNOWN:
                     if (isset($this->_errorsRegistry[500]))
                         return $this->_executeAction($this->_errorsRegistry[500]);
@@ -404,14 +403,20 @@ class WaterPipe
         } catch (\Exception $e) {
             if (isset($this->_errorsRegistry[500]))
                 $this->_executeAction($this->_errorsRegistry[500]);
-            else throw $e;
+            else {
+                $config = WaterPipeConfig::get();
+                if ($config->useStderr()) {
+                    $string = $e->__toString();
+                    fwrite(STDERR, $string, strlen($string));
+                } else throw $e;
+            }
         }
     }
 
     private function _executeAction($runner)
     {
         if (is_callable($runner) || is_array($runner)) {
-            call_user_func_array($runner, array(Request::getInstance(), new Response()));
+            call_user_func_array($runner, array(Request::capture(), new Response()));
         } elseif (is_subclass_of($runner, RouteAction::class)) {
             if (is_string($runner)) {
                 $runner = new $runner;
@@ -430,8 +435,8 @@ class WaterPipe
         $runner = null;
 
         foreach ($routes as $pattern => $action) {
-            if (RequestUri::isMatch($pattern = RequestUri::makeUri($this->_baseUri, $pattern), Request::getInstance()->uri->getUri())) {
-                Request::getInstance()->uri->setPattern($pattern)->build();
+            if (RequestUri::isMatch($pattern = RequestUri::makeUri($this->_baseUri, $pattern), Request::capture()->uri->getUri())) {
+                Request::capture()->uri->setPattern($pattern)->build();
                 $runner = $action;
                 break;
             }

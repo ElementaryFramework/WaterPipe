@@ -43,7 +43,7 @@ class WaterPipeConfig
     private static $_instance = null;
 
     /**
-     * Gets the unique instance of watter pipe configuration.
+     * Gets the unique instance of WaterPipeConfig.
      *
      * @return WaterPipeConfig
      */
@@ -69,6 +69,14 @@ class WaterPipeConfig
      * @var string
      */
     private $_defaultCharset = "utf-8";
+
+    /**
+     * Defines if WaterPipe uses the stderr output channel
+     * to print errors and uncaught exceptions.
+     *
+     * @var boolean
+     */
+    private $_useStderr = true;
 
     /**
      * WaterPipeConfig constructor.
@@ -110,5 +118,29 @@ class WaterPipeConfig
     public function setDefaultCharset(string $defaultCharset): void
     {
         $this->_defaultCharset = $defaultCharset;
+    }
+
+    /**
+     * Checks if WaterPipe print errors and uncaught exceptions in the stderr.
+     *
+     * @return  boolean
+     */
+    public function useStderr()
+    {
+        return $this->_useStderr;
+    }
+
+    /**
+     * Set if WaterPipe have to print errors and uncaught exceptions in the stderr.
+     *
+     * @param  bool $useStderr True to enable, false to disable.
+     *
+     * @return  self
+     */
+    public function setUseStderr(bool $useStderr)
+    {
+        $this->_useStderr = $useStderr;
+
+        return $this;
     }
 }

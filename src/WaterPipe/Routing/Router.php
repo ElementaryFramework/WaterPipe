@@ -53,7 +53,7 @@ class Router
 
     private function __construct()
     {
-        $this->_request =& Request::getInstance();
+        $this->_request = new Request();
     }
 
     public static function &getInstance()

@@ -37,11 +37,6 @@ use ElementaryFramework\WaterPipe\Routing\Router;
 class Request
 {
     /**
-     * @var Request
-     */
-    private static $_instance = null;
-
-    /**
      * @var int
      */
     private $_method;
@@ -74,7 +69,7 @@ class Request
     /**
      * Request constructor.
      */
-    private function __construct()
+    public function __construct()
     {
         $this->uri = new RequestUri();
 
@@ -95,18 +90,6 @@ class Request
     }
 
     /**
-     * @return Request
-     */
-    public static function &getInstance(): Request
-    {
-        static $instance;
-
-        $instance[0] = self::$_instance === null ? self::$_instance = new Request() : self::$_instance;
-
-        return $instance[0];
-    }
-
-    /**
      * @return int
      */
     public function getMethod(): int
@@ -123,9 +106,9 @@ class Request
     }
 
     /**
-     * @return RequestData
+     * @return RequestData|null
      */
-    public function getParams(): RequestData
+    public function getParams(): ?RequestData
     {
         return $this->_params;
     }
@@ -176,6 +159,14 @@ class Request
     public function getHeader(): RequestHeader
     {
         return $this->_header;
+    }
+
+    /**
+     * @param RequestHeader $header
+     */
+    public function setHeader(RequestHeader $header): void
+    {
+        $this->_header = $header;
     }
 
     /**
