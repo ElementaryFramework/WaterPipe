@@ -91,7 +91,12 @@ class RequestUri implements \ArrayAccess
      */
     public function setUri(string $uri): RequestUri
     {
-        $this->_uri = "/" . trim($uri, "/");
+        if (preg_match("/^(http|ftp)[s]?:\/\/.+/U", $uri)) {
+            $this->_uri = $uri;
+        } else {
+            $this->_uri = "/" . trim($uri, "/");
+        }
+
         return $this;
     }
 

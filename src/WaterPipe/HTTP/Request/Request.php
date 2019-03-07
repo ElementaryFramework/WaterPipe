@@ -32,6 +32,9 @@
 
 namespace ElementaryFramework\WaterPipe\HTTP\Request;
 
+use ElementaryFramework\WaterPipe\Exceptions\UnsupportedRequestMethodException;
+use ElementaryFramework\WaterPipe\HTTP\Response\Response;
+use ElementaryFramework\WaterPipe\HTTP\Response\ResponseHeader;
 use ElementaryFramework\WaterPipe\Routing\Router;
 
 class Request
@@ -177,6 +180,65 @@ class Request
     public function isAjax(): bool
     {
         return (!empty($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQUESTED_WITH"]) === "xmlhttprequest");
+    }
+
+    /**
+     * Sends the request.
+     *
+     * @return bool|Response false when the request is unsuccessful, the response data otherwise.
+     * @throws UnsupportedRequestMethodException
+     * @throws \Exception
+     */
+    public function send()
+    {
+        $parameters = json_decode($this->getParams()->jsonSerialize(), true);
+
+        $path = $this->uri->getUri();
+        $path .= "?" . http_build_query($parameters);
+
+        if (!($curl = @\curl_init($path)))
+            return false;
+
+        register_shutdown_function(function () use (&$curl) {
+            curl_close($curl);
+        });
+
+        $headers = new ResponseHeader();
+
+        \curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($curl, CURLOPT_HEADERFUNCTION, function ($_, $header) use (&$headers) {
+            $len = strlen($header);
+            $header = explode(':', $header, 2);
+
+            if (count($header) < 2)
+                return $len;
+
+            $headers->setField($header[0], trim($header[1]));
+
+            return $len;
+        });
+
+        switch ($this->_method) {
+            case RequestMethod::GET:
+                break;
+
+            case RequestMethod::POST:
+                \curl_setopt($curl, CURLOPT_POST, true);
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
+                break;
+
+            default:
+                throw new UnsupportedRequestMethodException();
+        }
+
+        if (!($data = @\curl_exec($curl)))
+            return false;
+
+        $response = new Response();
+        $response->setHeader($headers);
+        $response->setBody($data);
+
+        return $response;
     }
 
     /**
