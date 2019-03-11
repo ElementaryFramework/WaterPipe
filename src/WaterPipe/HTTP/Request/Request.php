@@ -192,7 +192,8 @@ class Request
      */
     public function send()
     {
-        $parameters = json_decode($this->getParams()->jsonSerialize(), true);
+        $parameters = $this->getParams()->toArray();
+        $body = $this->getBody()->toArray();
 
         $path = $this->uri->getUri();
         $path .= "?" . http_build_query($parameters);
@@ -214,7 +215,7 @@ class Request
             if (count($header) < 2)
                 return $len;
 
-            $headers->setField($header[0], trim($header[1]));
+            $headers->setField(trim($header[0]), trim($header[1]));
 
             return $len;
         });
@@ -225,17 +226,17 @@ class Request
 
             case RequestMethod::POST:
                 \curl_setopt($curl, CURLOPT_POST, true);
-                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($body));
                 break;
 
             case RequestMethod::DELETE:
                 \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($body));
                 break;
 
             case RequestMethod::PUT:
                 \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($body));
                 break;
 
             default:
