@@ -261,4 +261,14 @@ class RequestData implements \ArrayAccess, \Countable, \JsonSerializable, \Seria
     {
         return count($this->_parameters);
     }
+
+    /**
+     * Returns the array representation of this instance.
+     *
+     * @return array The array representation of {@see RequestData}
+     */
+    public function toArray(): array
+    {
+        return $this->_parameters;
+    }
 }
