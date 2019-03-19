@@ -406,8 +406,10 @@ class WaterPipe
             else {
                 $config = WaterPipeConfig::get();
                 if ($config->useStderr()) {
+                    $stream = fopen("php://stderr", 'w');
                     $string = $e->__toString();
-                    fwrite(STDERR, $string, strlen($string));
+                    fwrite($stream, $string, strlen($string));
+                    fclose($stream);
                 } else throw $e;
             }
         }
