@@ -32,6 +32,7 @@
 
 namespace ElementaryFramework\WaterPipe\HTTP\Request;
 
+use ElementaryFramework\WaterPipe\Exceptions\RequestException;
 use ElementaryFramework\WaterPipe\Exceptions\UnsupportedRequestMethodException;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\HTTP\Response\ResponseHeader;
@@ -76,21 +77,10 @@ class Request
     public function __construct()
     {
         $this->uri = new RequestUri();
-
         $this->_header = new RequestHeader();
-
-        foreach ($_SERVER as $key => $value) {
-            if (strpos($key, "HTTP_", 0) === 0) {
-                $parts = explode("_", $key);
-                array_shift($parts);
-
-                $headerName = implode("-", array_map(function ($name) {
-                    return ucfirst(strtolower($name));
-                }, $parts));
-
-                $this->_header[$headerName] = $value;
-            }
-        }
+        $this->_body = new RequestData();
+        $this->_params = new RequestData();
+        $this->_cookies = new RequestData();
     }
 
     /**
@@ -186,8 +176,9 @@ class Request
     /**
      * Sends the request.
      *
-     * @return bool|Response false when the request is unsuccessful, the response data otherwise.
+     * @return Response The response data.
      * @throws UnsupportedRequestMethodException
+     * @throws RequestException When the request was not sent successfully.
      * @throws \Exception
      */
     public function send()
@@ -199,7 +190,7 @@ class Request
         $path .= "?" . http_build_query($parameters);
 
         if (!($curl = @\curl_init($path)))
-            return false;
+            throw new RequestException("Unable to initialize cURL.");
 
         register_shutdown_function(function () use (&$curl) {
             curl_close($curl);
@@ -243,8 +234,11 @@ class Request
                 throw new UnsupportedRequestMethodException();
         }
 
+        \curl_setopt($curl, CURLOPT_HEADER, true);
+        \curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getHeader()->toArray());
+
         if (!($data = @\curl_exec($curl)))
-            return false;
+            throw new RequestException(\curl_error($curl));
 
         $response = new Response();
         $response->setHeader($headers);
