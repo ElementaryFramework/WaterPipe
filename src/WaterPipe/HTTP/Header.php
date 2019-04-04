@@ -54,6 +54,16 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
         return $this->_fields[$name];
     }
 
+    public function toArray(): array
+    {
+        $raw = array();
+
+        foreach ($this->_fields as $key => $value)
+            $raw[] = "{$key}: {$value}";
+
+        return $raw;
+    }
+
     /**
      * Whether a offset exists
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
