@@ -34,6 +34,7 @@ namespace ElementaryFramework\WaterPipe\Routing;
 
 use ElementaryFramework\WaterPipe\HTTP\Request\Request;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestData;
+use ElementaryFramework\WaterPipe\HTTP\Request\RequestHeader;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
 use ElementaryFramework\WaterPipe\WaterPipeConfig;
 
@@ -65,16 +66,46 @@ class Router
         return $instance[0];
     }
 
-    public function build()
+    public function build(): self
     {
         if (!$this->_built) {
-            $this->_detectUri();
+            $this->_detectHeaders();
             $this->_detectMethod();
+            $this->_detectUri();
 
             $this->_built = true;
         }
 
         return $this;
+    }
+
+    private function _detectMethod()
+    {
+        if (isset($_SERVER["REQUEST_METHOD"])) {
+            switch (strtolower($_SERVER["REQUEST_METHOD"])) {
+                case "get":
+                    $this->_request->setMethod(RequestMethod::GET);
+                    break;
+
+                case "post":
+                    $this->_request->setMethod(RequestMethod::POST);
+                    break;
+
+                case "put":
+                    $this->_request->setMethod(RequestMethod::PUT);
+                    break;
+
+                case "delete":
+                    $this->_request->setMethod(RequestMethod::DELETE);
+                    break;
+
+                default:
+                    $this->_request->setMethod(RequestMethod::UNKNOWN);
+                    break;
+            }
+        } else {
+            $this->_request->setMethod(RequestMethod::UNKNOWN);
+        }
     }
 
     private function _detectUri()
@@ -108,7 +139,32 @@ class Router
 
         $this->_request->setParams(new RequestData($_GET));
 
-        $this->_request->setBody(new RequestData($_POST));
+        $data = array();
+
+        if ($this->_request->getMethod() === RequestMethod::PUT) {
+            $handle = fopen("php://input", "r");
+            $rawData = '';
+            while ($chunk = fread($handle, 1024)) {
+                $rawData .= $chunk;
+            }
+
+            parse_str($rawData, $data);
+        } elseif (count($_POST) > 0) {
+            $data &= $_POST;
+        } elseif ($this->_request->getMethod() !== RequestMethod::GET) {
+            $rawData = file_get_contents("php://input");
+
+            switch ($this->_request->getHeader()->getContentType()) {
+                case "application/json":
+                    $data = json_decode($rawData, true);
+                    break;
+                case "application/xml":
+                    $data = (array)simplexml_load_string($rawData);
+                    break;
+            }
+        }
+
+        $this->_request->setBody(new RequestData($data));
 
         $this->_request->setCookies(new RequestData($_COOKIE));
 
@@ -122,32 +178,16 @@ class Router
         $this->_request->uri->setUri(str_replace(array('//', '../'), '/', trim($uri)));
     }
 
-    private function _detectMethod()
+    private function _detectHeaders()
     {
-        if (isset($_SERVER["REQUEST_METHOD"])) {
-            switch (strtolower($_SERVER["REQUEST_METHOD"])) {
-                case "get":
-                    $this->_request->setMethod(RequestMethod::GET);
-                    break;
+        if (is_array($headers = getallheaders())) {
+            $header = new RequestHeader();
 
-                case "post":
-                    $this->_request->setMethod(RequestMethod::POST);
-                    break;
-
-                case "put":
-                    $this->_request->setMethod(RequestMethod::PUT);
-                    break;
-
-                case "delete":
-                    $this->_request->setMethod(RequestMethod::DELETE);
-                    break;
-
-                default:
-                    $this->_request->setMethod(RequestMethod::UNKNOWN);
-                    break;
+            foreach ($headers as $key => $value) {
+                $header->setField($key, $value);
             }
-        } else {
-            $this->_request->setMethod(RequestMethod::UNKNOWN);
+
+            $this->_request->setHeader($header);
         }
     }
 
