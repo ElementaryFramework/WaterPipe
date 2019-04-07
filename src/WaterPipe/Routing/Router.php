@@ -150,7 +150,7 @@ class Router
 
             parse_str($rawData, $data);
         } elseif (count($_POST) > 0) {
-            $data &= $_POST;
+            $data = $_POST;
         } elseif ($this->_request->getMethod() !== RequestMethod::GET) {
             $rawData = file_get_contents("php://input");
 
