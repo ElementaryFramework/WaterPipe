@@ -154,7 +154,8 @@ class Router
         } elseif ($this->_request->getMethod() !== RequestMethod::GET) {
             $rawData = file_get_contents("php://input");
 
-            switch ($this->_request->getHeader()->getContentType()) {
+            $contentType = trim(explode(";", $this->_request->getHeader()->getContentType())[0]);
+            switch ($contentType) {
                 case "application/json":
                     $data = json_decode($rawData, true);
                     break;
