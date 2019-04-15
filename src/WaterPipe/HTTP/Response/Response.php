@@ -201,6 +201,21 @@ class Response
     }
 
     /**
+     * Redirect the current request to another URI
+     *
+     * @param string $uri The path to the new URI
+     *
+     * @throws \Exception
+     */
+    public function redirect(string $uri)
+    {
+        $this->_status = new ResponseStatus(ResponseStatus::PermanentRedirectCode);
+        $this->_header->setLocation($uri);
+
+        $this->send();
+    }
+
+    /**
      * Set the response body.
      *
      * @param string $body The body.
