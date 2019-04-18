@@ -141,20 +141,31 @@ class Router
 
         $data = array();
 
-        if ($this->_request->getMethod() === RequestMethod::PUT) {
+        $contentType = trim(explode(";", $this->_request->getHeader()->getContentType())[0]);
+
+        if (count($_POST) > 0) {
+            $data = $_POST;
+        } elseif ($this->_request->getMethod() === RequestMethod::PUT) {
             $handle = fopen("php://input", "r");
             $rawData = '';
             while ($chunk = fread($handle, 1024)) {
                 $rawData .= $chunk;
             }
 
-            parse_str($rawData, $data);
-        } elseif (count($_POST) > 0) {
-            $data = $_POST;
+            switch ($contentType) {
+                case "application/json":
+                    $data = json_decode($rawData, true);
+                    break;
+                case "application/xml":
+                    $data = (array)simplexml_load_string($rawData);
+                    break;
+                default:
+                    parse_str($rawData, $data);
+                    break;
+            }
         } elseif ($this->_request->getMethod() !== RequestMethod::GET) {
             $rawData = file_get_contents("php://input");
 
-            $contentType = trim(explode(";", $this->_request->getHeader()->getContentType())[0]);
             switch ($contentType) {
                 case "application/json":
                     $data = json_decode($rawData, true);
