@@ -138,12 +138,12 @@ class RequestHeader extends Header
 
     public function setContentLength(int $value)
     {
-        $this->setField("Content-Length", $value);
+        $this->setField("Content-Length", strval($value));
     }
 
     public function getContentLength(): int
     {
-        return $this->getField("Content-Length");
+        return intval($this->getField("Content-Length"));
     }
 
     public function setContentType(string $value)
@@ -258,12 +258,12 @@ class RequestHeader extends Header
 
     public function setMaxForward(int $value)
     {
-        $this->setField("Max-Forward", $value);
+        $this->setField("Max-Forward", strval($value));
     }
 
     public function getMaxForward(): int
     {
-        return $this->getField("Max-Forward");
+        return intval($this->getField("Max-Forward"));
     }
 
     public function setOrigin(string $value)

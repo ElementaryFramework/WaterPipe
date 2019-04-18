@@ -68,12 +68,12 @@ class ResponseHeader extends Header
 
     public function setAge(int $value)
     {
-        $this->setField("Age", $value);
+        $this->setField("Age", strval($value));
     }
 
     public function getAge(): int
     {
-        return $this->getField("Age");
+        return intval($this->getField("Age"));
     }
 
     public function setAllow(string $value)
@@ -148,12 +148,12 @@ class ResponseHeader extends Header
 
     public function setContentLength(int $value)
     {
-        $this->setField("Content-Length", $value);
+        $this->setField("Content-Length", strval($value));
     }
 
     public function getContentLength(): int
     {
-        return $this->getField("Content-Length");
+        return intval($this->getField("Content-Length"));
     }
 
     public function setContentLocation(string $value)

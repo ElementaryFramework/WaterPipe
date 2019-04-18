@@ -51,7 +51,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
 
     public function getField(string $name): string
     {
-        return $this->_fields[$name];
+        return array_key_exists($name, $this->_fields) ? $this->_fields[$name] : "";
     }
 
     public function toArray(): array
