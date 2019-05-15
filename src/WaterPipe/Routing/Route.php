@@ -67,6 +67,8 @@ abstract class Route
     }
 
     /**
+     * Returns the URI handled by this route.
+     *
      * @return string
      */
     public function getUri(): string
@@ -74,13 +76,33 @@ abstract class Route
         return $this->_uri;
     }
 
+    /**
+     * Execute an action when any kind of request method
+     * is sent to this route.
+     */
     public abstract function request();
 
+    /**
+     * Execute an action when a GET request method
+     * is sent to this route.
+     */
     public abstract function get();
 
+    /**
+     * Execute an action when a POST request method
+     * is sent to this route.
+     */
     public abstract function post();
 
+    /**
+     * Execute an action when a PUT request method
+     * is sent to this route.
+     */
     public abstract function put();
 
+    /**
+     * Execute an action when a DELETE request method
+     * is sent to this route.
+     */
     public abstract function delete();
 }

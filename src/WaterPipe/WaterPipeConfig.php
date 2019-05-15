@@ -74,7 +74,7 @@ class WaterPipeConfig
      * Defines if WaterPipe uses the stderr output channel
      * to print errors and uncaught exceptions.
      *
-     * @var boolean
+     * @var bool
      */
     private $_useStderr = true;
 
@@ -123,7 +123,7 @@ class WaterPipeConfig
     /**
      * Checks if WaterPipe print errors and uncaught exceptions in the stderr.
      *
-     * @return  boolean
+     * @return  bool
      */
     public function useStderr()
     {

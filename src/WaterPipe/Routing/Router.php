@@ -50,13 +50,24 @@ class Router
      */
     private $_request;
 
+    /**
+     * @var bool
+     */
     private $_built = false;
 
+    /**
+     * Router constructor
+     */
     private function __construct()
     {
         $this->_request = new Request();
     }
 
+    /**
+     * Returns the unique instance of the Router.
+     *
+     * @return self
+     */
     public static function &getInstance()
     {
         static $instance;
@@ -66,6 +77,11 @@ class Router
         return $instance[0];
     }
 
+    /**
+     * Builds the router and capture the request.
+     *
+     * @return self
+     */
     public function build(): self
     {
         if (!$this->_built) {
@@ -79,6 +95,9 @@ class Router
         return $this;
     }
 
+    /**
+     * Detects the current request method.
+     */
     private function _detectMethod()
     {
         if (isset($_SERVER["REQUEST_METHOD"])) {
@@ -108,6 +127,9 @@ class Router
         }
     }
 
+    /**
+     * Detects the current request URI.
+     */
     private function _detectUri()
     {
         $config = WaterPipeConfig::get();
@@ -190,6 +212,9 @@ class Router
         $this->_request->uri->setUri(str_replace(array('//', '../'), '/', trim($uri)));
     }
 
+    /**
+     * Detects the current request headers.
+     */
     private function _detectHeaders()
     {
         if (is_array($headers = getallheaders())) {
@@ -204,6 +229,8 @@ class Router
     }
 
     /**
+     * Checks if the router is built or not.
+     *
      * @return bool
      */
     public function isBuilt(): bool
@@ -212,6 +239,9 @@ class Router
     }
 
     /**
+     * Returns the captured request at the build time
+     * of the router.
+     *
      * @return Request
      */
     public function &getRequest(): Request

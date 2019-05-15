@@ -135,7 +135,7 @@ class WaterPipe
      * Triggers all middlewares with before send event
      * defined on the running pipe.
      *
-     * @param Response $response The response on which trigger the event.
+     * @param Response &$response The response on which trigger the event.
      */
     public static function triggerBeforeSendEvent(Response &$response)
     {
@@ -148,7 +148,7 @@ class WaterPipe
      * Triggers all middlewares with before execute event
      * defined on the running pipe.
      *
-     * @param Request $request The request to execute.
+     * @param Request &$request The request to execute.
      */
     public static function triggerBeforeExecuteEvent(Request &$request)
     {
@@ -346,6 +346,9 @@ class WaterPipe
         return null;
     }
 
+    /**
+     * Executes the request.
+     */
     private function _executeRequest()
     {
         try {

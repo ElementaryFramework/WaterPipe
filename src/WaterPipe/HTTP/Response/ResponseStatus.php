@@ -151,7 +151,7 @@ class ResponseStatus
     );
 
     /**
-     * @var integer
+     * @var int
      */
     private $_code;
 
@@ -186,6 +186,8 @@ class ResponseStatus
     }
 
     /**
+     * Returns the response status code.
+     *
      * @return int
      */
     public function getCode(): int
@@ -194,6 +196,8 @@ class ResponseStatus
     }
 
     /**
+     * Returns the response status description.
+     *
      * @return string
      */
     public function getDescription(): string
@@ -202,6 +206,8 @@ class ResponseStatus
     }
 
     /**
+     * Returns the list of registered status codes and descriptions
+     *
      * @return array
      */
     public static function getRegistry(): array
@@ -209,6 +215,12 @@ class ResponseStatus
         return self::$_registry;
     }
 
+    /**
+     * Add a new response status code in the registry
+     *
+     * @param int $code The response status code
+     * @param string $description The response status description
+     */
     public static function registerStatusCode(int $code, string $description)
     {
         self::$_registry[$code] = $description;

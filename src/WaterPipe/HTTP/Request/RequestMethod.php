@@ -34,6 +34,7 @@ namespace ElementaryFramework\WaterPipe\HTTP\Request;
 
 /**
  * Class RequestMethod
+ *
  * @package  WaterPipe
  * @category Enumerations
  */

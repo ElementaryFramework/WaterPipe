@@ -37,7 +37,17 @@ use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 
 abstract class Middleware
 {
+    /**
+     * Executes an action just before the execution of the request.
+     *
+     * @param Request &$request The request wich will be executed.
+     */
     public abstract function beforeExecute(Request &$request);
 
+    /**
+     * Executes an action just before send the response.
+     *
+     * @param Response &$response The response which will be sent.
+     */
     public abstract function beforeSend(Response &$response);
 }

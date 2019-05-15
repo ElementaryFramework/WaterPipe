@@ -84,6 +84,8 @@ class Request
     }
 
     /**
+     * Returns the request method.
+     *
      * @return int
      */
     public function getMethod(): int
@@ -92,6 +94,8 @@ class Request
     }
 
     /**
+     * Sets the request method.
+     *
      * @param int $type
      */
     public function setMethod(int $type): void
@@ -100,6 +104,8 @@ class Request
     }
 
     /**
+     * Returns the set of request parameters from query string.
+     *
      * @return RequestData|null
      */
     public function getParams(): ?RequestData
@@ -108,6 +114,8 @@ class Request
     }
 
     /**
+     * Sets the request parameters.
+     *
      * @param RequestData $params
      */
     public function setParams(RequestData $params): void
@@ -116,6 +124,8 @@ class Request
     }
 
     /**
+     * Returns the request body.
+     *
      * @return RequestData
      */
     public function getBody(): RequestData
@@ -124,6 +134,8 @@ class Request
     }
 
     /**
+     * Sets the request body.
+     *
      * @param RequestData $body
      */
     public function setBody(RequestData $body): void
@@ -132,6 +144,8 @@ class Request
     }
 
     /**
+     * Returns the set of cookies attached to the request.
+     *
      * @return RequestData
      */
     public function getCookies(): RequestData
@@ -140,6 +154,8 @@ class Request
     }
 
     /**
+     * Sets the cookies attached to the request.
+     *
      * @param RequestData $cookies
      */
     public function setCookies(RequestData $cookies): void
@@ -148,6 +164,8 @@ class Request
     }
 
     /**
+     * Returns the request headers.
+     *
      * @return RequestHeader
      */
     public function getHeader(): RequestHeader
@@ -156,6 +174,8 @@ class Request
     }
 
     /**
+     * Set the request headers.
+     *
      * @param RequestHeader $header
      */
     public function setHeader(RequestHeader $header): void

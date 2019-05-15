@@ -58,5 +58,8 @@ abstract class RouteAction
         $this->_response = new Response();
     }
 
+    /**
+     * Executes the action.
+     */
     public abstract function execute();
 }

@@ -44,17 +44,35 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      */
     private $_position = 0;
 
+    /**
+     * Create or change the value of an HTTP header field.
+     *
+     * @param string $name The name of the header field
+     * @param string $value The value of the header field
+     */
     public function setField(string $name, string $value)
     {
         $this->_fields[strtolower($name)] = $value;
     }
 
+    /**
+     * Returns the value of an HTTP heade field.
+     *
+     * @param string $name The name of the header field
+     *
+     * @return string The value of the header field.
+     */
     public function getField(string $name): string
     {
         $name = strtolower($name);
         return array_key_exists($name, $this->_fields) ? $this->_fields[$name] : "";
     }
 
+    /**
+     * Returns the set of headers in the HTTP format.
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         $raw = array();
@@ -71,7 +89,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      * @param mixed $offset <p>
      * An offset to check for.
      * </p>
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      * </p>
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
@@ -173,7 +191,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
     /**
      * Checks if current position is valid
      * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
+     * @return bool The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
