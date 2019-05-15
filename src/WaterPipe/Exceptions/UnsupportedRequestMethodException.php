@@ -36,6 +36,6 @@ class UnsupportedRequestMethodException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct("The wanted request method is not supported at this time.");
+        parent::__construct("The wanted request method is unknown or not supported at this time.");
     }
 }
