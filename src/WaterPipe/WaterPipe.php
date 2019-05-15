@@ -32,7 +32,7 @@
 
 namespace ElementaryFramework\WaterPipe;
 
-use ElementaryFramework\WaterPipe\Exceptions\InternalServerErrorException;
+use ElementaryFramework\WaterPipe\Exceptions\UnsupportedRequestMethodException;
 use ElementaryFramework\WaterPipe\Exceptions\NotFoundErrorException;
 use ElementaryFramework\WaterPipe\HTTP\Request\Request;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
@@ -358,7 +358,7 @@ class WaterPipe
                 case RequestMethod::UNKNOWN:
                     if (isset($this->_errorsRegistry[500]))
                         return $this->_executeAction($this->_errorsRegistry[500]);
-                    else throw new InternalServerErrorException();
+                    else throw new UnsupportedRequestMethodException();
 
                 case RequestMethod::GET:
                     $registry = $this->_getRequestRegistry;
