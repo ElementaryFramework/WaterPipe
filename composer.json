@@ -13,7 +13,8 @@
     }
   ],
   "require": {
-    "php": "^7.1.10"
+    "php": "^7.1.10",
+    "ext-curl": "*"
   },
   "keywords": [
     "url",
