@@ -46,11 +46,12 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
 
     public function setField(string $name, string $value)
     {
-        $this->_fields[$name] = $value;
+        $this->_fields[strtolower($name)] = $value;
     }
 
     public function getField(string $name): string
     {
+        $name = strtolower($name);
         return array_key_exists($name, $this->_fields) ? $this->_fields[$name] : "";
     }
 
