@@ -118,6 +118,14 @@ class Router
                     $this->_request->setMethod(RequestMethod::DELETE);
                     break;
 
+                case "head":
+                    $this->_request->setMethod(RequestMethod::HEAD);
+                    break;
+
+                case "patch":
+                    $this->_request->setMethod(RequestMethod::PATCH);
+                    break;
+
                 default:
                     $this->_request->setMethod(RequestMethod::UNKNOWN);
                     break;
@@ -167,7 +175,7 @@ class Router
 
         if (count($_POST) > 0) {
             $data = $_POST;
-        } elseif ($this->_request->getMethod() === RequestMethod::PUT) {
+        } elseif ($this->_request->getMethod() === RequestMethod::PUT || $this->_request->getMethod() === RequestMethod::PATCH) {
             $handle = fopen("php://input", "r");
             $rawData = '';
             while ($chunk = fread($handle, 1024)) {

@@ -69,4 +69,16 @@ abstract class RequestMethod
      * @var int
      */
     public const DELETE = 4;
+
+    /**
+     * The HEAD request method.
+     * @var int
+     */
+    public const HEAD = 5;
+
+    /**
+     * The PATCH request method.
+     * @var int
+     */
+    public const PATCH = 6;
 }
