@@ -105,4 +105,16 @@ abstract class Route
      * is sent to this route.
      */
     public abstract function delete();
+
+    /**
+     * Execute an action when a HEAD request method
+     * is sent to this route.
+     */
+    public abstract function head();
+
+    /**
+     * Execute an action when a PATCH request method
+     * is sent to this route.
+     */
+    public abstract function patch();
 }

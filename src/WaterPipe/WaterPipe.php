@@ -41,6 +41,7 @@ use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
 use ElementaryFramework\WaterPipe\Routing\Route;
 use ElementaryFramework\WaterPipe\Routing\RouteAction;
+use ElementaryFramework\WaterPipe\Routing\RouteMap;
 
 class WaterPipe
 {
@@ -102,6 +103,20 @@ class WaterPipe
     private $_deleteRequestRegistry;
 
     /**
+     * The array of registered head requests.
+     *
+     * @var callable[]
+     */
+    private $_headRequestRegistry;
+
+    /**
+     * The array of registered patch requests.
+     *
+     * @var callable[]
+     */
+    private $_patchRequestRegistry;
+
+    /**
      * The array of registered requests.
      *
      * @var callable[]
@@ -122,6 +137,13 @@ class WaterPipe
      * @var callable[]
      */
     private $_pipesRegistry;
+
+    /**
+     * The array of route maps.
+     *
+     * @var RouteMap[]
+     */
+    private $_mapRegistry;
 
     /**
      * @return WaterPipe
@@ -168,9 +190,12 @@ class WaterPipe
         $this->_postRequestRegistry = array();
         $this->_putRequestRegistry = array();
         $this->_deleteRequestRegistry = array();
+        $this->_headRequestRegistry = array();
+        $this->_patchRequestRegistry = array();
         $this->_requestRegistry = array();
         $this->_errorsRegistry = array();
         $this->_pipesRegistry = array();
+        $this->_mapRegistry = array();
     }
 
     /**
@@ -184,7 +209,7 @@ class WaterPipe
         if ($plugin instanceof Middleware) {
             array_push($this->_middlewareRegistry, $plugin);
         } elseif ($plugin instanceof Route) {
-            foreach (array("request", "get", "post", "put", "delete") as $method) {
+            foreach (array("request", "get", "post", "put", "delete", "head", "patch") as $method) {
                 $this->$method($plugin->getUri(), array($plugin, $method));
             }
         } elseif ($plugin instanceof WaterPipe) {
@@ -194,7 +219,9 @@ class WaterPipe
                          "post" => $plugin->_postRequestRegistry,
                          "put" => $plugin->_putRequestRegistry,
                          "error" => $plugin->_errorsRegistry,
-                         "delete" => $plugin->_deleteRequestRegistry) as $method => $registry) {
+                         "delete" => $plugin->_deleteRequestRegistry,
+                         "head" => $plugin->_headRequestRegistry,
+                         "patch" => $plugin->_patchRequestRegistry) as $method => $registry) {
 
                 foreach ($registry as $uri => $action) {
                     $this->$method($uri, $action);
@@ -202,6 +229,11 @@ class WaterPipe
 
             }
         }
+    }
+
+    public function map(string $baseUri, RouteMap $routeMap)
+    {
+        $this->_mapRegistry[$baseUri] = $routeMap;
     }
 
     /**
@@ -262,6 +294,30 @@ class WaterPipe
     public function delete(string $uri, $action)
     {
         $this->_deleteRequestRegistry[$uri] = $action;
+    }
+
+    /**
+     * Register a HEAD request handled by this pipe.
+     *
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
+    public function head(string $uri, $action)
+    {
+        $this->_headRequestRegistry[$uri] = $action;
+    }
+
+    /**
+     * Register a PATCH request handled by this pipe.
+     *
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
+    public function patch(string $uri, $action)
+    {
+        $this->_patchRequestRegistry[$uri] = $action;
     }
 
     /**
@@ -347,6 +403,20 @@ class WaterPipe
     }
 
     /**
+     * @return array|null
+     */
+    private function _findRouteMap()
+    {
+        foreach ($this->_mapRegistry as $baseUri => &$map) {
+            if (preg_match("#^" . RequestUri::makeUri($this->_baseUri, RequestUri::pattern2regex($baseUri)) . "#", Request::capture()->uri->getUri())) {
+                return array(RequestUri::makeUri($this->_baseUri, $baseUri), $map);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Executes the request.
      */
     private function _executeRequest()
@@ -354,6 +424,13 @@ class WaterPipe
         try {
             // Execute middleware
             self::triggerBeforeExecuteEvent(Request::capture());
+
+            $map = $this->_findRouteMap();
+
+            if ($map !== null) {
+                $uri = str_replace('/' . trim($map[0], "/ ") . '/', '', '/' . ltrim(Request::capture()->uri->getUri(), "/ "));
+                $map[1]->map($uri);
+            }
 
             $registry = null;
 
@@ -377,6 +454,14 @@ class WaterPipe
 
                 case RequestMethod::DELETE:
                     $registry = $this->_deleteRequestRegistry;
+                    break;
+
+                case RequestMethod::HEAD:
+                    $registry = $this->_headRequestRegistry;
+                    break;
+
+                case RequestMethod::PATCH:
+                    $registry = $this->_patchRequestRegistry;
                     break;
             }
 
