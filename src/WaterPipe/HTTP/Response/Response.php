@@ -73,6 +73,18 @@ class Response
         // Execute middleware
         WaterPipe::triggerBeforeSendEvent($this);
 
+        // Send headers
+        $this->sendHeaders();
+
+        // Send body
+        $this->sendBody();
+
+        // Exit properly
+        $this->close();
+    }
+
+    public function sendHeaders() : self
+    {
         // Set status code
         $code = $this->_status->getCode();
         $text = $this->_status->getDescription();
@@ -93,11 +105,15 @@ class Response
             }
         }
 
-        // Send body
+        return $this;
+    }
+
+    public function sendBody() : self
+    {
+        // Print the body
         echo $this->_body;
 
-        // Exit properly
-        exit(0);
+        return $this;
     }
 
     /**
@@ -200,6 +216,11 @@ class Response
         }
     }
 
+    public function close()
+    {
+        exit(0);
+    }
+
     /**
      * Redirect the current request to another URI
      *
@@ -212,7 +233,7 @@ class Response
         $this->_status = new ResponseStatus(ResponseStatus::PermanentRedirectCode);
         $this->_header->setLocation($uri);
 
-        $this->send();
+        $this->sendHeaders()->close();
     }
 
     /**
