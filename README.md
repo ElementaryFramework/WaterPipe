@@ -8,7 +8,8 @@
 
 A powerful routing framework and requests/responses handler for PHP
 
-WaterPipe is a library which allows you to handle easily HTTP requests and responses with PHP, giving you all the power to build a fully RESTful API, to create a routing framework for your web application, etc...
+WaterPipe is a library which allows you to easily handle HTTP requests and responses with PHP, giving you all the power
+to build a fully RESTful API, to create a routing framework for your web application, etc...
 
 ## Example
 
@@ -28,7 +29,7 @@ $root = new WaterPipe;
 
 // Add a new route to the pipe with HTTP GET method (the home page)
 $root->get("/", function (Request $req, Response $res) {
-    $res->sendHtml("<b>Welcome to my web app !</b>");
+    $res->sendHtml("<b>Welcome to my web app !</b> <a href=\"/login\">Click here to login</a>");
 });
 
 // Add a new route to the pipe with HTTP GET method (the login page)
@@ -50,12 +51,8 @@ $root->post("/login", function (Request $req, Response $res) {
                 "success" => true
             ));
         } else {
-            $header = new ResponseHeader;
-            $header->setLocation("/members/{$username}");
-
-            // Overwrite response header for redirection
-            $res->setHeader($header);
-            $res->send();
+            // Redirect the user to the members page
+            $res->redirect("/members/{$username}");
         }
     } else {
         // Checks if the client access this route with an AJAX request
@@ -64,12 +61,8 @@ $root->post("/login", function (Request $req, Response $res) {
                 "success" => false
             ));
         } else {
-            $header = new ResponseHeader;
-            $header->setLocation("/login");
-
-            // Overwrite response header for redirection
-            $res->setHeader($header);
-            $res->send();
+            // Redirect the user to the members page
+            $res->redirect("/login");
         }
     }
 });
@@ -92,7 +85,7 @@ $root->run();
 
 - Highly designed to quickly create routes for MVC applications and REST services ;
 - Object Oriented HTTP [requests](https://github.com/ElementaryFramework/WaterPipe/blob/master/src/WaterPipe/HTTP/Request/Request.php) and [responses](https://github.com/ElementaryFramework/WaterPipe/blob/master/src/WaterPipe/HTTP/Response/Response.php) management ;
-- Full support for HTTP methods: GET, POST, PUT and DELETE (more HTTP methods wil be added) ;
+- Full support for HTTP methods: GET, POST, PUT, DELETE, HEAD and PATCH ;
 - Easily handle common HTTP errors (404, 500, etc...) ;
 - Designed to work with frontend frameworks like React.js, AngularJS, Vue.js, etc... with AJAX support
 
@@ -116,6 +109,6 @@ New to **WaterPipe** ? Learn how to build routing frameworks and REST services b
 
 ## License
 
-&copy; Copyright 2018-2019 Aliens Group, Inc.
+&copy; Copyright 2018-2019 Aliens Group.
 
 Licensed under MIT ([read license](https://github.com/ElementaryFramework/WaterPipe/blob/master/LICENSE))
