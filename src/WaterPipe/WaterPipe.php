@@ -328,6 +328,10 @@ class WaterPipe
      */
     public function pipe(string $baseUri, WaterPipe $pipe)
     {
+        foreach ($this->_middlewareRegistry as $middleware) {
+            $pipe->use($middleware);
+        }
+
         $this->_pipesRegistry[$baseUri] = $pipe;
     }
 
