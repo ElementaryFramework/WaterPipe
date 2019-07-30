@@ -193,7 +193,12 @@ class RequestUri implements \ArrayAccess
     public static function isMatch(string $pattern, string $uri): bool
     {
         $pattern = self::pattern2regex($pattern);
-        return preg_match("#^{$pattern}\$#", "/" . trim($uri, "/")) != false;
+        return (
+            preg_match("#^{$pattern}\$#", "/" . trim($uri, "/") . "/") ||
+            preg_match("#^{$pattern}\$#", "/" . trim($uri, "/")) ||
+            preg_match("#^{$pattern}\$#", trim($uri, "/")) ||
+            preg_match("#^{$pattern}\$#", $uri)
+        ) != false;
     }
 
     private static function _getUriParams(string $pattern): array
