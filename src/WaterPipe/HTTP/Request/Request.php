@@ -260,10 +260,12 @@ class Request
         if (!($data = @\curl_exec($curl)))
             throw new RequestException(\curl_error($curl));
 
+        $data = substr($data, \curl_getinfo($curl, CURLINFO_HEADER_SIZE));
+
         $response = new Response();
         $response->setHeader($headers);
         $response->setBody($data);
-        $response->setStatus(new ResponseStatus(intval(curl_getinfo($curl, CURLINFO_HTTP_CODE))));
+        $response->setStatus(new ResponseStatus(intval(\curl_getinfo($curl, CURLINFO_HTTP_CODE))));
 
         return $response;
     }
