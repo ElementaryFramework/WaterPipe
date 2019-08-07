@@ -61,8 +61,14 @@ class RequestUri implements \ArrayAccess
      */
     private $_built = false;
 
+    public function __construct(string $uri = null)
+    {
+        if ($uri !== null)
+            $this->setUri($uri);
+    }
+
     /**
-     * Checks if the this URI is equal tu the given one.
+     * Checks if the this URI is equal to the given one.
      *
      * @param string $uri The URI to compare with this instance.
      *
