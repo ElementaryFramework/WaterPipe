@@ -52,11 +52,11 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      */
     public function setField(string $name, string $value)
     {
-        $this->_fields[strtolower($name)] = $value;
+        $this[$name] = $value;
     }
 
     /**
-     * Returns the value of an HTTP heade field.
+     * Returns the value of an HTTP header field.
      *
      * @param string $name The name of the header field
      *
@@ -64,8 +64,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      */
     public function getField(string $name): string
     {
-        $name = strtolower($name);
-        return array_key_exists($name, $this->_fields) ? $this->_fields[$name] : "";
+        return $this->offsetExists($name) ? $this[$name] : "";
     }
 
     /**
@@ -97,7 +96,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->_fields);
+        return array_key_exists(strtolower($offset), $this->_fields);
     }
 
     /**
@@ -112,7 +111,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
     public function offsetGet($offset)
     {
         if ($this->offsetExists($offset)) {
-            return $this->_fields[$offset];
+            return $this->_fields[strtolower($offset)];
         }
 
         return null;
@@ -132,7 +131,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
      */
     public function offsetSet($offset, $value)
     {
-        $this->_fields[$offset] = $value;
+        $this->_fields[strtolower($offset)] = $value;
     }
 
     /**
@@ -147,7 +146,7 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
     public function offsetUnset($offset)
     {
         if ($this->offsetExists($offset)) {
-            unset($this->_fields[$offset]);
+            unset($this->_fields[strtolower($offset)]);
         }
     }
 
