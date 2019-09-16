@@ -178,9 +178,8 @@ class Router
         } elseif ($this->_request->getMethod() === RequestMethod::PUT || $this->_request->getMethod() === RequestMethod::PATCH) {
             $handle = fopen("php://input", "r");
             $rawData = '';
-            while ($chunk = fread($handle, 1024)) {
-                $rawData .= $chunk;
-            }
+            while ($chunk = fread($handle, 1024)) $rawData .= $chunk;
+            fclose($handle);
 
             switch ($contentType) {
                 case "application/json":
@@ -189,7 +188,7 @@ class Router
                 case "application/xml":
                     $data = (array)simplexml_load_string($rawData);
                     break;
-                default:
+                case "application/x-www-form-urlencoded":
                     parse_str($rawData, $data);
                     break;
             }
@@ -202,6 +201,9 @@ class Router
                     break;
                 case "application/xml":
                     $data = (array)simplexml_load_string($rawData);
+                    break;
+                case "application/x-www-form-urlencoded":
+                    parse_str($rawData, $data);
                     break;
             }
         }
