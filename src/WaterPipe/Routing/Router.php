@@ -205,7 +205,7 @@ class Router
                 case "application/x-www-form-urlencoded":
                     parse_str($rawData, $data);
                     break;
-            }
+                }
         }
 
         $this->_request->setBody(new RequestData($data));
@@ -227,7 +227,7 @@ class Router
      */
     private function _detectHeaders()
     {
-        if (is_array($headers = getallheaders())) {
+        if (is_array($headers = $this->_getallheaders())) {
             $header = new RequestHeader();
 
             foreach ($headers as $key => $value) {
@@ -235,6 +235,20 @@ class Router
             }
 
             $this->_request->setHeader($header);
+        }
+    }
+
+    private function _getallheaders()
+    {
+        if (!function_exists("getallheaders")) {
+            $headers = [];
+            foreach ($_SERVER as $name => $value)
+                if (substr($name, 0, 5) == 'HTTP_')
+                    $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+
+            return $headers;
+        } else {
+            return getallheaders();
         }
     }
 
