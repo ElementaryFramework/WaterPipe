@@ -109,7 +109,7 @@ class RequestUri implements \ArrayAccess
     /**
      * @return string
      */
-    public function getUri(): string
+    public function getUri(): ?string
     {
         return $this->_uri;
     }
