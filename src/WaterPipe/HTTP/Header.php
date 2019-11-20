@@ -45,6 +45,18 @@ abstract class Header implements \ArrayAccess, \SeekableIterator, \JsonSerializa
     private $_position = 0;
 
     /**
+     * Create a new managed HTTP headers set.
+     *
+     * @param array $fields The initial set of HTTP headers.
+     */
+    public function __construct(array $fields = array())
+    {
+        foreach ($fields as $key => $value) {
+            $this->setField($key, $value);
+        }
+    }
+
+    /**
      * Create or change the value of an HTTP header field.
      *
      * @param string $name The name of the header field
