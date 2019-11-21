@@ -57,6 +57,11 @@ class Request
     private $_body;
 
     /**
+     * @var string
+     */
+    private $_rawBody;
+
+    /**
      * @var RequestData
      */
     private $_cookies;
@@ -126,21 +131,29 @@ class Request
     /**
      * Returns the request body.
      *
-     * @return RequestData
+     * @return RequestData|string
      */
-    public function getBody(): RequestData
+    public function getBody()
     {
-        return $this->_body;
+        return $this->_body != null
+            ? $this->_body
+            : $this->_rawBody;
     }
 
     /**
      * Sets the request body.
      *
-     * @param RequestData $body
+     * @param RequestData|string $body
      */
-    public function setBody(RequestData $body): void
+    public function setBody($body): void
     {
-        $this->_body = $body;
+        if ($body instanceof RequestData) {
+            $this->_body = $body;
+            $this->_rawBody = null;
+        } else {
+            $this->_body = null;
+            $this->_rawBody = $body;
+        }
     }
 
     /**
@@ -204,16 +217,26 @@ class Request
     public function send()
     {
         $parameters = $this->getParams()->toArray();
-        $body = $this->getBody()->toArray();
+        $body = $this->getBody();
+
+        if ($body instanceof RequestData) {
+            if ($this->_header->getContentType() === "application/json") {
+                $body = json_encode($body->toArray());
+            } else {
+                $body = http_build_query($body->toArray());
+            }
+        }
 
         $path = $this->uri->getUri();
-        $path .= "?" . http_build_query($parameters);
+
+        if (count($parameters) > 0)
+            $path .= "?" . http_build_query($parameters);
 
         if (!($curl = @\curl_init($path)))
             throw new RequestException("Unable to initialize cURL.");
 
         register_shutdown_function(function () use (&$curl) {
-            curl_close($curl);
+            \curl_close($curl);
         });
 
         $headers = new ResponseHeader();
@@ -223,10 +246,8 @@ class Request
             $len = strlen($header);
             $header = explode(':', $header, 2);
 
-            if (count($header) < 2)
-                return $len;
-
-            $headers->setField(trim($header[0]), trim($header[1]));
+            if (count($header) >= 2)
+                $headers->setField(trim($header[0]), trim($header[1]));
 
             return $len;
         });
@@ -237,17 +258,26 @@ class Request
 
             case RequestMethod::POST:
                 \curl_setopt($curl, CURLOPT_POST, true);
-                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($body));
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
                 break;
 
             case RequestMethod::DELETE:
                 \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($body));
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
                 break;
 
             case RequestMethod::PUT:
                 \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-                \curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($body));
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+                break;
+
+            case RequestMethod::PATCH:
+                \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PATCH");
+                \curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+                break;
+
+            case RequestMethod::HEAD:
+                \curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "HEAD");
                 break;
 
             default:

@@ -173,7 +173,7 @@ class Router
 
         $this->_request->setParams(new RequestData($_GET));
 
-        $data = array();
+        $data = new RequestData();
 
         $contentType = trim(explode(";", $this->_request->getHeader()->getContentType())[0]);
 
@@ -187,13 +187,17 @@ class Router
 
             switch ($contentType) {
                 case "application/json":
-                    $data = json_decode($rawData, true);
+                    $data = new RequestData(json_decode($rawData, true));
                     break;
                 case "application/xml":
-                    $data = (array)simplexml_load_string($rawData);
+                    $data = new RequestData((array)simplexml_load_string($rawData));
                     break;
                 case "application/x-www-form-urlencoded":
                     parse_str($rawData, $data);
+                    $data = new RequestData($data);
+                    break;
+                default:
+                    $data = $rawData;
                     break;
             }
         } elseif ($this->_request->getMethod() !== RequestMethod::GET) {
@@ -201,18 +205,22 @@ class Router
 
             switch ($contentType) {
                 case "application/json":
-                    $data = json_decode($rawData, true);
+                    $data = new RequestData(json_decode($rawData, true));
                     break;
                 case "application/xml":
-                    $data = (array)simplexml_load_string($rawData);
+                    $data = new RequestData((array)simplexml_load_string($rawData));
                     break;
                 case "application/x-www-form-urlencoded":
                     parse_str($rawData, $data);
+                    $data = new RequestData($data);
                     break;
-                }
+                default:
+                    $data = $rawData;
+                    break;
+            }
         }
 
-        $this->_request->setBody(new RequestData($data));
+        $this->_request->setBody($data);
 
         $this->_request->setCookies(new RequestData($_COOKIE));
 
