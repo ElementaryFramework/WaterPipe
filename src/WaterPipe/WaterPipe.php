@@ -117,6 +117,13 @@ class WaterPipe
     private $_patchRequestRegistry;
 
     /**
+     * The array of registered options requests.
+     *
+     * @var callable[]
+     */
+    private $_optionsRequestRegistry;
+
+    /**
      * The array of registered requests.
      *
      * @var callable[]
@@ -192,6 +199,7 @@ class WaterPipe
         $this->_deleteRequestRegistry = array();
         $this->_headRequestRegistry = array();
         $this->_patchRequestRegistry = array();
+        $this->_optionsRequestRegistry = array();
         $this->_requestRegistry = array();
         $this->_errorsRegistry = array();
         $this->_pipesRegistry = array();
@@ -208,12 +216,16 @@ class WaterPipe
     {
         if ($plugin instanceof Middleware) {
             array_push($this->_middlewareRegistry, $plugin);
-        } elseif ($plugin instanceof Route) {
-            foreach (array("request", "get", "post", "put", "delete", "head", "patch") as $method) {
+        }
+
+        if ($plugin instanceof Route) {
+            foreach (["request", "get", "post", "put", "delete", "head", "patch", "options"] as $method) {
                 $this->$method($plugin->getUri(), array($plugin, $method));
             }
-        } elseif ($plugin instanceof WaterPipe) {
-            foreach (array(
+        }
+
+        if ($plugin instanceof WaterPipe) {
+            foreach ([
                          "request" => $plugin->_requestRegistry,
                          "get" => $plugin->_getRequestRegistry,
                          "post" => $plugin->_postRequestRegistry,
@@ -221,7 +233,9 @@ class WaterPipe
                          "error" => $plugin->_errorsRegistry,
                          "delete" => $plugin->_deleteRequestRegistry,
                          "head" => $plugin->_headRequestRegistry,
-                         "patch" => $plugin->_patchRequestRegistry) as $method => $registry) {
+                "patch" => $plugin->_patchRequestRegistry,
+                "options" =>  $plugin->_optionsRequestRegistry
+             ] as $method => $registry) {
 
                 foreach ($registry as $uri => $action) {
                     $this->$method($uri, $action);
@@ -231,6 +245,12 @@ class WaterPipe
         }
     }
 
+    /**
+     * Maps an URI to a RouteMap.
+     *
+     * @param string   $baseUri  The base URI on which starts the mapping.
+     * @param RouteMap $routeMap An instance of the RouteMap class defining how to map sub-routes.
+     */
     public function map(string $baseUri, RouteMap $routeMap)
     {
         $this->_mapRegistry[$baseUri] = $routeMap;
@@ -318,6 +338,18 @@ class WaterPipe
     public function patch(string $uri, $action)
     {
         $this->_patchRequestRegistry[$uri] = $action;
+    }
+
+    /**
+     * Register an OPTIONS request handled by this pipe.
+     *
+     * @param string   $uri    The request URI.
+     * @param callable $action The action to call when the request
+     *                         correspond to the given  URI.
+     */
+    public function options(string $uri, $action)
+    {
+        $this->_optionsRequestRegistry[$uri] = $action;
     }
 
     /**
@@ -466,6 +498,10 @@ class WaterPipe
 
                 case RequestMethod::PATCH:
                     $registry = $this->_patchRequestRegistry;
+                    break;
+
+                case RequestMethod::OPTIONS:
+                    $registry = $this->_optionsRequestRegistry;
                     break;
             }
 

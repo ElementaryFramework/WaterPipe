@@ -81,4 +81,10 @@ abstract class RequestMethod
      * @var int
      */
     public const PATCH = 6;
+
+    /**
+     * The OPTIONS request method.
+     * @var int
+     */
+     public const OPTIONS = 7;
 }

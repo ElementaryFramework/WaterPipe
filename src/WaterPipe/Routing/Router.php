@@ -126,6 +126,10 @@ class Router
                     $this->_request->setMethod(RequestMethod::PATCH);
                     break;
 
+                case "options":
+                    $this->_request->setMethod(RequestMethod::OPTIONS);
+                    break;
+
                 default:
                     $this->_request->setMethod(RequestMethod::UNKNOWN);
                     break;

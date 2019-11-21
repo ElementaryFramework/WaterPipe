@@ -80,41 +80,47 @@ abstract class Route
      * Execute an action when any kind of request method
      * is sent to this route.
      */
-    public abstract function request();
+    public function request() {}
 
     /**
      * Execute an action when a GET request method
      * is sent to this route.
      */
-    public abstract function get();
+    public function get() {}
 
     /**
      * Execute an action when a POST request method
      * is sent to this route.
      */
-    public abstract function post();
+    public function post() {}
 
     /**
      * Execute an action when a PUT request method
      * is sent to this route.
      */
-    public abstract function put();
+    public function put() {}
 
     /**
      * Execute an action when a DELETE request method
      * is sent to this route.
      */
-    public abstract function delete();
+    public function delete() {}
 
     /**
      * Execute an action when a HEAD request method
      * is sent to this route.
      */
-    public abstract function head();
+    public function head() {}
 
     /**
      * Execute an action when a PATCH request method
      * is sent to this route.
      */
-    public abstract function patch();
+    public function patch() {}
+
+    /**
+     * Execute an action when a OPTIONS request method
+     * is sent to this route.
+     */
+    public function options() {}
 }
