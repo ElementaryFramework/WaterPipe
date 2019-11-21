@@ -80,6 +80,18 @@ class RequestUri implements \ArrayAccess
     }
 
     /**
+     * Checks if the this URI matches the given pattern.
+     *
+     * @param string $pattern The Regex pattern.
+     *
+     * @return bool
+     */
+    public function match(string $pattern): bool
+    {
+        return static::isMatch($pattern, $this->_uri);
+    }
+
+    /**
      * @param string $pattern
      *
      * @return RequestUri
