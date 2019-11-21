@@ -243,13 +243,13 @@ class WaterPipe
 
         if ($plugin instanceof WaterPipe) {
             foreach ([
-                         "request" => $plugin->_requestRegistry,
-                         "get" => $plugin->_getRequestRegistry,
-                         "post" => $plugin->_postRequestRegistry,
-                         "put" => $plugin->_putRequestRegistry,
-                         "error" => $plugin->_errorsRegistry,
-                         "delete" => $plugin->_deleteRequestRegistry,
-                         "head" => $plugin->_headRequestRegistry,
+                "request" => $plugin->_requestRegistry,
+                "get" => $plugin->_getRequestRegistry,
+                "post" => $plugin->_postRequestRegistry,
+                "put" => $plugin->_putRequestRegistry,
+                "error" => $plugin->_errorsRegistry,
+                "delete" => $plugin->_deleteRequestRegistry,
+                "head" => $plugin->_headRequestRegistry,
                 "patch" => $plugin->_patchRequestRegistry,
                 "options" =>  $plugin->_optionsRequestRegistry
              ] as $method => $registry) {
@@ -475,9 +475,6 @@ class WaterPipe
     private function _executeRequest()
     {
         try {
-            // Execute middleware
-            self::triggerBeforeExecuteEvent(Request::capture());
-
             $map = $this->_findRouteMap();
 
             if ($map !== null) {
@@ -543,12 +540,15 @@ class WaterPipe
                 throw new \Exception("Malformed route action");
             }
 
+            // Execute middleware
+            self::triggerBeforeExecuteEvent(Request::capture());
+
             // NOTE: No code will be executed after this call...
             $this->_executeAction($runner);
         } catch (\Exception $e) {
-            if (isset($this->_errorsRegistry[500]))
+            if (isset($this->_errorsRegistry[500])) {
                 $this->_executeAction($this->_errorsRegistry[500]);
-            else {
+            } else {
                 $config = WaterPipeConfig::get();
                 if ($config->useStderr()) {
                     $stream = fopen("php://stderr", 'w');
