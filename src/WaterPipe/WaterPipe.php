@@ -39,6 +39,8 @@ use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
+use ElementaryFramework\WaterPipe\Routing\Middleware\IRouteMiddleware;
+use ElementaryFramework\WaterPipe\Routing\Middleware\MiddlewareWrapper;
 use ElementaryFramework\WaterPipe\Routing\Route;
 use ElementaryFramework\WaterPipe\Routing\RouteAction;
 use ElementaryFramework\WaterPipe\Routing\RouteMap;
@@ -219,6 +221,21 @@ class WaterPipe
         }
 
         if ($plugin instanceof Route) {
+            if ($plugin instanceof IRouteMiddleware) {
+                $this->use(new MiddlewareWrapper(
+                    function (Request $request) use (&$plugin) {
+                        if ($request->uri->match($plugin->getUri())) {
+                            $plugin->beforeExecute();
+                        }
+                    },
+                    function (Response $response) use (&$plugin) {
+                        if (Request::capture()->uri->match($plugin->getUri())) {
+                            $plugin->beforeSend();
+                        }
+                    }
+                ));
+            }
+
             foreach (["request", "get", "post", "put", "delete", "head", "patch", "options"] as $method) {
                 $this->$method($plugin->getUri(), array($plugin, $method));
             }

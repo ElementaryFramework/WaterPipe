@@ -32,23 +32,15 @@
 
 namespace ElementaryFramework\WaterPipe\Routing\Middleware;
 
-use ElementaryFramework\WaterPipe\HTTP\Request\Request;
-use ElementaryFramework\WaterPipe\HTTP\Response\Response;
-
-abstract class Middleware
+interface IRouteMiddleware
 {
     /**
-     * Executes an action just before the execution of the request.
-     *
-     * @param Request &$request The request which will be executed.
-     *
+     * Executes an action just before the execution of the Route request.
      */
-    public abstract function beforeExecute(Request &$request);
+    public function beforeExecute();
 
     /**
-     * Executes an action just before send the response.
-     *
-     * @param Response &$response The response which will be sent.
+     * Executes an action just before send the Route response.
      */
-    public abstract function beforeSend(Response &$response);
+    public function beforeSend();
 }

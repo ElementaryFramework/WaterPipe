@@ -32,23 +32,52 @@
 
 namespace ElementaryFramework\WaterPipe\Routing\Middleware;
 
+use Closure;
 use ElementaryFramework\WaterPipe\HTTP\Request\Request;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
 
-abstract class Middleware
+class MiddlewareWrapper extends Middleware
 {
+    /**
+     * @var Closure
+     */
+    private $_beforeExecute;
+
+    /**
+     * @var Closure
+     */
+    private $_beforeSend;
+
+    /**
+     * Create a new MiddlewareWrapper
+     *
+     * @param callable $beforeExecute The wrapped callable for the before execute event.
+     * @param callable $beforeSend    The wrapped callable for the before send event.
+     */
+    public function __construct(callable $beforeExecute, callable $beforeSend)
+    {
+        $this->_beforeExecute = Closure::fromCallable($beforeExecute);
+        $this->_beforeSend = Closure::fromCallable($beforeSend);
+    }
+
     /**
      * Executes an action just before the execution of the request.
      *
      * @param Request &$request The request which will be executed.
      *
      */
-    public abstract function beforeExecute(Request &$request);
+    public function beforeExecute(Request &$request)
+    {
+        $this->_beforeExecute->call($this, $request);
+    }
 
     /**
      * Executes an action just before send the response.
      *
      * @param Response &$response The response which will be sent.
      */
-    public abstract function beforeSend(Response &$response);
+    public function beforeSend(Response &$response)
+    {
+        $this->_beforeSend->call($this, $response);
+    }
 }
