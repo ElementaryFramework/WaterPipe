@@ -22,12 +22,15 @@
     "routing",
     "middleware",
     "http",
+    "https",
     "request",
     "response",
     "get",
     "post",
     "put",
-    "delete"
+    "delete",
+    "rest",
+    "api"
   ],
   "autoload": {
     "psr-4": {
