@@ -106,6 +106,16 @@ class RequestHeader extends Header
         return $this->getField("Access-Control-Request-Method");
     }
 
+    public function setAccessControlRequestHeaders(string $value)
+    {
+        $this->setField("Access-Control-Request-Headers", $value);
+    }
+
+    public function getAccessControlRequestHeaders(): string
+    {
+        return $this->getField("Access-Control-Request-Headers");
+    }
+
     public function setAuthorization(string $value)
     {
         $this->setField("Authorization", $value);

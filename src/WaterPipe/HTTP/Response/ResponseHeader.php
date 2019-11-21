@@ -66,6 +66,66 @@ class ResponseHeader extends Header
         return $this->getField("Accept-Ranges");
     }
 
+    public function setAccessControlAllowCredentials(string $value)
+    {
+        $this->setField("Access-Control-Allow-Credentials", $value);
+    }
+
+    public function getAccessControlAllowCredentials(): string
+    {
+        return $this->getField("Access-Control-Allow-Credentials");
+    }
+
+    public function setAccessControlAllowHeaders(string $value)
+    {
+        $this->setField("Access-Control-Allow-Headers", $value);
+    }
+
+    public function getAccessControlAllowHeaders(): string
+    {
+        return $this->getField("Access-Control-Allow-Headers");
+    }
+
+    public function setAccessControlAllowMethods(string $value)
+    {
+        $this->setField("Access-Control-Allow-Methods", $value);
+    }
+
+    public function getAccessControlAllowMethods(): string
+    {
+        return $this->getField("Access-Control-Allow-Methods");
+    }
+
+    public function setAccessControlAllowOrigin(string $value)
+    {
+        $this->setField("Access-Control-Allow-Origin", $value);
+    }
+
+    public function getAccessControlAllowOrigin(): string
+    {
+        return $this->getField("Access-Control-Allow-Origin");
+    }
+
+    public function setAccessControlExposeHeaders(string $value)
+    {
+        $this->setField("Access-Control-Expose-Headers", $value);
+    }
+
+    public function getAccessControlExposeHeaders(): string
+    {
+        return $this->getField("Access-Control-Expose-Headers");
+    }
+
+    public function setAccessControlMaxAge(string $value)
+    {
+        $this->setField("Access-Control-Max-Age", $value);
+    }
+
+    public function getAccessControlMaxAge(): string
+    {
+        return $this->getField("Access-Control-Max-Age");
+    }
+
     public function setAge(int $value)
     {
         $this->setField("Age", strval($value));
