@@ -85,8 +85,8 @@ $root->run();
 
 - Highly designed to quickly create routes for MVC applications and REST services ;
 - Object Oriented HTTP [requests](https://github.com/ElementaryFramework/WaterPipe/blob/master/src/WaterPipe/HTTP/Request/Request.php) and [responses](https://github.com/ElementaryFramework/WaterPipe/blob/master/src/WaterPipe/HTTP/Response/Response.php) management ;
-- Full support for HTTP methods: GET, POST, PUT, DELETE, HEAD and PATCH ;
-- Easily handle common HTTP errors (404, 500, etc...) ;
+- Full support for HTTP methods: GET, POST, PUT, DELETE, HEAD, PATCH and OPTIONS ;
+- Easily handle common HTTP errors (404, 500) ;
 - Designed to work with frontend frameworks like React.js, AngularJS, Vue.js, etc... with AJAX support
 
 ## Installation
