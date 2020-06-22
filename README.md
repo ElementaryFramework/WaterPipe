@@ -6,6 +6,11 @@
 
 # WaterPipe
 
+![downloads](https://img.shields.io/packagist/dt/elementaryframework/water-pipe?style=for-the-badge&logo=packagist)
+![downloads](https://img.shields.io/packagist/v/elementaryframework/water-pipe?style=for-the-badge&logo=packagist)
+![downloads](https://img.shields.io/github/repo-size/ElementaryFramework/WaterPipe?style=for-the-badge&logo=github)
+![downloads](https://img.shields.io/github/license/ElementaryFramework/WaterPipe?style=for-the-badge&logo=github)
+
 A powerful routing framework and requests/responses handler for PHP
 
 WaterPipe is a library which allows you to easily handle HTTP requests and responses with PHP, giving you all the power
