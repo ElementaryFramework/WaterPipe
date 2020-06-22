@@ -109,7 +109,7 @@ New to **WaterPipe** ? Learn how to build routing frameworks and REST services b
 
 ## Donate
 
-Like Elementary Framework ? Help us continue to maintain it and provide you better support and awesome functionalities with a small donation!
+Liking Elementary Framework? Help us continue to maintain it and provide you better support and awesome functionalities with a small donation!
 
 [![Donate PayPal Button](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AGAQAC3W4ZRMA&source=url)
 
