@@ -107,8 +107,14 @@ New to **WaterPipe** ? Learn how to build routing frameworks and REST services b
 
 - [How to create a RESTful API with PHP and the Elementary Framework](https://dev.to/na2axl/how-to-create-a-restful-api-with-php-and-the-elementary-framework-30ij) written by @na2axl on dev.to
 
+## Donate
+
+Like Elementary Framework ? Help us continue to maintain it and provide you better support and awesome functionalities with a small donation!
+
+[![Donate PayPal Button](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AGAQAC3W4ZRMA&source=url)
+
 ## License
 
-&copy; Copyright 2018-2019 Aliens Group.
+&copy; Copyright 2018-2020 Aliens Group.
 
 Licensed under MIT ([read license](https://github.com/ElementaryFramework/WaterPipe/blob/master/LICENSE))
