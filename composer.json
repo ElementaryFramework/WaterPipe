@@ -14,7 +14,9 @@
   ],
   "require": {
     "php": "^7.1.10",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "elementaryframework/events": "^0.0.1",
+    "elementaryframework/streams": "^0.0.2"
   },
   "keywords": [
     "url",
