@@ -32,6 +32,10 @@
 
 namespace ElementaryFramework\WaterPipe;
 
+use ElementaryFramework\WaterPipe\Configuration\DefaultErrorLogger;
+use ElementaryFramework\WaterPipe\Configuration\IErrorLogger;
+use ElementaryFramework\WaterPipe\Configuration\StdErrorLogger;
+
 class WaterPipeConfig
 {
     /**
@@ -71,18 +75,19 @@ class WaterPipeConfig
     private $_defaultCharset = "utf-8";
 
     /**
-     * Defines if WaterPipe uses the stderr output channel
-     * to print errors and uncaught exceptions.
+     * Defines the error logger to use in WaterPipe.
      *
-     * @var bool
+     * @var IErrorLogger
      */
-    private $_useStderr = true;
+    private $_errorLogger = null;
 
     /**
      * WaterPipeConfig constructor.
      */
     private function __construct()
-    { }
+    {
+        $this->_errorLogger = new DefaultErrorLogger();
+    }
 
     /**
      * Checks if query strings are enabled.
@@ -97,14 +102,20 @@ class WaterPipeConfig
     /**
      * Set the enabled state of query strings.
      *
-     * @param bool $enable
+     * @param bool $enable true to enable query strings, false otherwise.
+     * 
+     * @return self
      */
-    public function setQueryStringEnabled(bool $enable): void
+    public function setQueryStringEnabled(bool $enable): WaterPipeConfig
     {
         $this->_queryStringEnabled = $enable;
+
+        return $this;
     }
 
     /**
+     * Returns the defined default charset.
+     * 
      * @return string
      */
     public function getDefaultCharset(): string
@@ -113,33 +124,71 @@ class WaterPipeConfig
     }
 
     /**
+     * Sets the default charset to use when sending responses.
+     * 
      * @param string $defaultCharset
+     * 
+     * @return self
      */
-    public function setDefaultCharset(string $defaultCharset): void
+    public function setDefaultCharset(string $defaultCharset): WaterPipeConfig
     {
         $this->_defaultCharset = $defaultCharset;
+
+        return $this;
     }
 
     /**
      * Checks if WaterPipe print errors and uncaught exceptions in the stderr.
+     * This method is deprecated and it is not recommended to use it in new projects.
      *
+     * @deprecated 1.3.0
+     * 
      * @return  bool
      */
-    public function useStderr()
+    public function useStderr(): bool
     {
-        return $this->_useStderr;
+        return $this->_errorLogger instanceof StdErrorLogger;
     }
 
     /**
      * Set if WaterPipe have to print errors and uncaught exceptions in the stderr.
+     * This method is deprecated and it is not recommended to use it in new projects.
      *
+     * @deprecated 1.3.0
+     * 
      * @param  bool $useStderr True to enable, false to disable.
      *
-     * @return  self
+     * @return self
      */
-    public function setUseStderr(bool $useStderr)
+    public function setUseStderr(bool $useStderr): WaterPipeConfig
     {
-        $this->_useStderr = $useStderr;
+        $this->_errorLogger = $useStderr
+            ? new StdErrorLogger()
+            : new DefaultErrorLogger();
+
+        return $this;
+    }
+
+    /**
+     * Gets the error logger currently used by WaterPipe.
+     *
+     * @return IErrorLogger
+     */
+    public function errorLogger(): IErrorLogger
+    {
+        return $this->_errorLogger;
+    }
+
+    /**
+     * Defines the error logger to use in WaterPipe.
+     *
+     * @param IErrorLogger $errorLogger The error logger.
+     * 
+     * @return self
+     */
+    public function setErrorLogger(IErrorLogger $errorLogger): WaterPipeConfig
+    {
+        $this->_errorLogger = $errorLogger;
 
         return $this;
     }
