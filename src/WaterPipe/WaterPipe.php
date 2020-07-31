@@ -505,9 +505,7 @@ class WaterPipe
 
             switch (Request::capture()->getMethod()) {
                 case RequestMethod::UNKNOWN:
-                    if (isset($this->_errorsRegistry[500]))
-                        return $this->_executeAction($this->_errorsRegistry[500]);
-                    else throw new UnsupportedRequestMethodException();
+                    throw new UnsupportedRequestMethodException();
 
                 case RequestMethod::GET:
                     $registry = $this->_getRequestRegistry;
