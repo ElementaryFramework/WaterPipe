@@ -444,6 +444,7 @@ class WaterPipe
      * If an exception has occured while running the pipe
      * This method will return that exception.
      * Otherwise, will return null.
+     * @return \Exception
      */
     function getRunningException () {
         return $this->_runningException;
