@@ -155,7 +155,7 @@ class WaterPipe
     private $_mapRegistry;
 
     /**
-     * In case an exception occures during pipe execution, it will be
+     * In case an exception occurs during pipe execution, it will be
      * stored here for user code to read in middlewares and errorhandlers
      *
      * @var Exception
