@@ -143,7 +143,7 @@ class Response
      *
      * @throws \Exception
      */
-    public function sendJsonString(string $body, int $status = 200)
+    public function sendJsonString(string $body, int $status = ResponseStatus::OkCode)
     {
         $config = WaterPipeConfig::get();
 
@@ -162,7 +162,7 @@ class Response
      *
      * @throws \Exception
      */
-    public function sendJson(array $json, int $status = 200)
+    public function sendJson(array $json, int $status = ResponseStatus::OkCode)
     {
         $this->sendJsonString(json_encode($json), $status);
     }
@@ -175,7 +175,7 @@ class Response
      *
      * @throws \Exception
      */
-    public function sendText(string $body, int $status = 200)
+    public function sendText(string $body, int $status = ResponseStatus::OkCode)
     {
         $config = WaterPipeConfig::get();
 
@@ -196,7 +196,7 @@ class Response
      * @throws \Exception
      * @throws FileNotFoundException When the file was not found at the given path.
      */
-    public function sendFile(string $path, int $status = 200, string $mime = null)
+    public function sendFile(string $path, int $status = ResponseStatus::OkCode, string $mime = null)
     {
         $config = WaterPipeConfig::get();
 

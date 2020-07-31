@@ -38,6 +38,7 @@ use ElementaryFramework\WaterPipe\HTTP\Request\Request;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestMethod;
 use ElementaryFramework\WaterPipe\HTTP\Request\RequestUri;
 use ElementaryFramework\WaterPipe\HTTP\Response\Response;
+use ElementaryFramework\WaterPipe\HTTP\Response\ResponseStatus;
 use ElementaryFramework\WaterPipe\Routing\Middleware\Middleware;
 use ElementaryFramework\WaterPipe\Routing\Middleware\IRouteMiddleware;
 use ElementaryFramework\WaterPipe\Routing\Middleware\MiddlewareWrapper;
@@ -547,8 +548,8 @@ class WaterPipe
             }
 
             if ($runner === null) {
-                if (isset($this->_errorsRegistry[404]))
-                    return $this->_executeAction($this->_errorsRegistry[404]);
+                if (isset($this->_errorsRegistry[ResponseStatus::NotFoundCode]))
+                    return $this->_executeAction($this->_errorsRegistry[ResponseStatus::NotFoundCode]);
                 else throw new NotFoundErrorException();
             }
 
@@ -565,8 +566,8 @@ class WaterPipe
         } catch (\Exception $e) {
             $this->_runningException = $e;
 
-            if (isset($this->_errorsRegistry[500])) {
-                $this->_executeAction($this->_errorsRegistry[500]);
+            if (isset($this->_errorsRegistry[ResponseStatus::InternalServerErrorCode])) {
+                $this->_executeAction($this->_errorsRegistry[ResponseStatus::InternalServerErrorCode]);
             } else {
                 $config = WaterPipeConfig::get();
                 if ($config->useStderr()) {
