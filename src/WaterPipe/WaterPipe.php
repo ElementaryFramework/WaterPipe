@@ -570,11 +570,10 @@ class WaterPipe
                 $this->_executeAction($this->_errorsRegistry[ResponseStatus::InternalServerErrorCode]);
             } else {
                 $config = WaterPipeConfig::get();
-                if ($config->useStderr()) {
-                    $stream = fopen("php://stderr", 'w');
+                $logger = $config->errorLogger();
+                if ($logger !== null) {
                     $string = $e->__toString();
-                    fwrite($stream, $string, strlen($string));
-                    fclose($stream);
+                    $logger->log($string);
                 } else throw $e;
             }
         }
