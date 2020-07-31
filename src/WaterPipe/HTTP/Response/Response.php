@@ -83,7 +83,13 @@ class Response
         $this->close();
     }
 
-    public function sendHeaders() : self
+    /**
+     * Sends only headers of this response to the client.
+     * This will assume that the response body was not sent before.
+     *
+     * @return self
+     */
+    public function sendHeaders(): self
     {
         // Set status code
         $code = $this->_status->getCode();
@@ -108,7 +114,12 @@ class Response
         return $this;
     }
 
-    public function sendBody() : self
+    /**
+     * Sends this response body to the client.
+     *
+     * @return self
+     */
+    public function sendBody(): self
     {
         // Print the body
         echo $this->_body;
@@ -216,6 +227,11 @@ class Response
         }
     }
 
+    /**
+     * Properly closes this response and exit the application.
+     *
+     * @return void
+     */
     public function close()
     {
         exit(0);
