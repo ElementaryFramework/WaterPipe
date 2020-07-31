@@ -160,8 +160,8 @@ class WaterPipe
      *
      * @var \Exception
      */
-    private $_runningException;    
-    
+    private $_runningException;
+
     /**
      * @return WaterPipe
      */
@@ -261,12 +261,10 @@ class WaterPipe
                 "head" => $plugin->_headRequestRegistry,
                 "patch" => $plugin->_patchRequestRegistry,
                 "options" =>  $plugin->_optionsRequestRegistry
-             ] as $method => $registry) {
-
+            ] as $method => $registry) {
                 foreach ($registry as $uri => $action) {
                     $this->$method($uri, $action);
                 }
-
             }
         }
     }
@@ -439,14 +437,16 @@ class WaterPipe
             $pipe[1]->_runBase($pipe[0]);
         }
     }
-    
+
     /**
-     * If an exception has occured while running the pipe
-     * This method will return that exception.
+     * If an exception has occurred while running the pipe,
+     * this method will return that exception.
      * Otherwise, will return null.
+     * 
      * @return \Exception
      */
-    function getRunningException () {
+    public function getRunningException()
+    {
         return $this->_runningException;
     }
 
@@ -564,7 +564,7 @@ class WaterPipe
             $this->_executeAction($runner);
         } catch (\Exception $e) {
             $this->_runningException = $e;
-            
+
             if (isset($this->_errorsRegistry[500])) {
                 $this->_executeAction($this->_errorsRegistry[500]);
             } else {
