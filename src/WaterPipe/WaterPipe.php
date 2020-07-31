@@ -155,6 +155,14 @@ class WaterPipe
     private $_mapRegistry;
 
     /**
+     * In case an exception occurs during pipe execution, it will be
+     * stored here for user code to read in middlewares and error handlers
+     *
+     * @var \Exception
+     */
+    private $_runningException;    
+    
+    /**
      * @return WaterPipe
      */
     public static function getRunningInstance(): WaterPipe
@@ -206,6 +214,7 @@ class WaterPipe
         $this->_errorsRegistry = array();
         $this->_pipesRegistry = array();
         $this->_mapRegistry = array();
+        $this->_runningException = null;
     }
 
     /**
@@ -430,6 +439,16 @@ class WaterPipe
             $pipe[1]->_runBase($pipe[0]);
         }
     }
+    
+    /**
+     * If an exception has occured while running the pipe
+     * This method will return that exception.
+     * Otherwise, will return null.
+     * @return \Exception
+     */
+    function getRunningException () {
+        return $this->_runningException;
+    }
 
     /**
      * @param string $baseUri
@@ -546,6 +565,8 @@ class WaterPipe
             // NOTE: No code will be executed after this call...
             $this->_executeAction($runner);
         } catch (\Exception $e) {
+            $this->_runningException = $e;
+            
             if (isset($this->_errorsRegistry[500])) {
                 $this->_executeAction($this->_errorsRegistry[500]);
             } else {
