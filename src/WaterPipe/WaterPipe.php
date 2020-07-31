@@ -156,7 +156,7 @@ class WaterPipe
 
     /**
      * In case an exception occurs during pipe execution, it will be
-     * stored here for user code to read in middlewares and errorhandlers
+     * stored here for user code to read in middlewares and error handlers
      *
      * @var Exception
      */
