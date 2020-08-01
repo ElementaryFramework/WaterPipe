@@ -26,7 +26,7 @@
  * @author    Axel Nana <ax.lnana@outlook.com>
  * @copyright 2018 Aliens Group, Inc.
  * @license   MIT <https://github.com/ElementaryFramework/WaterPipe/blob/master/LICENSE>
- * @version   1.3.0
+ * @version   1.4.0
  * @link      http://waterpipe.na2axl.tk
  */
 
@@ -61,7 +61,7 @@ abstract class Route
      */
     public function __construct(string $uri)
     {
-        $this->_request =& Request::capture();
+        $this->_request = &Request::capture();
         $this->_response = new Response();
         $this->_uri = $uri;
     }
@@ -80,47 +80,63 @@ abstract class Route
      * Execute an action when any kind of request method
      * is sent to this route.
      */
-    public function request() {}
+    public function request()
+    {
+    }
 
     /**
      * Execute an action when a GET request method
      * is sent to this route.
      */
-    public function get() {}
+    public function get()
+    {
+    }
 
     /**
      * Execute an action when a POST request method
      * is sent to this route.
      */
-    public function post() {}
+    public function post()
+    {
+    }
 
     /**
      * Execute an action when a PUT request method
      * is sent to this route.
      */
-    public function put() {}
+    public function put()
+    {
+    }
 
     /**
      * Execute an action when a DELETE request method
      * is sent to this route.
      */
-    public function delete() {}
+    public function delete()
+    {
+    }
 
     /**
      * Execute an action when a HEAD request method
      * is sent to this route.
      */
-    public function head() {}
+    public function head()
+    {
+    }
 
     /**
      * Execute an action when a PATCH request method
      * is sent to this route.
      */
-    public function patch() {}
+    public function patch()
+    {
+    }
 
     /**
      * Execute an action when a OPTIONS request method
      * is sent to this route.
      */
-    public function options() {}
+    public function options()
+    {
+    }
 }

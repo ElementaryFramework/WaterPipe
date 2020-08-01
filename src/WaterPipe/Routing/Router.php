@@ -26,7 +26,7 @@
  * @author    Axel Nana <ax.lnana@outlook.com>
  * @copyright 2018 Aliens Group, Inc.
  * @license   MIT <https://github.com/ElementaryFramework/WaterPipe/blob/master/LICENSE>
- * @version   1.3.0
+ * @version   1.4.0
  * @link      http://waterpipe.na2axl.tk
  */
 
@@ -146,7 +146,7 @@ class Router
     {
         $config = WaterPipeConfig::get();
 
-        if (!isset($_SERVER['REQUEST_URI']) OR !isset($_SERVER['SCRIPT_NAME'])) {
+        if (!isset($_SERVER['REQUEST_URI']) or !isset($_SERVER['SCRIPT_NAME'])) {
             return;
         }
 

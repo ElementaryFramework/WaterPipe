@@ -26,7 +26,7 @@
  * @author    Axel Nana <ax.lnana@outlook.com>
  * @copyright 2018 Aliens Group, Inc.
  * @license   MIT <https://github.com/ElementaryFramework/WaterPipe/blob/master/LICENSE>
- * @version   1.3.0
+ * @version   1.4.0
  * @link      http://waterpipe.na2axl.tk
  */
 
@@ -86,5 +86,5 @@ abstract class RequestMethod
      * The OPTIONS request method.
      * @var int
      */
-     public const OPTIONS = 7;
+    public const OPTIONS = 7;
 }

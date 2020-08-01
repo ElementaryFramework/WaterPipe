@@ -26,7 +26,7 @@
  * @author    Axel Nana <ax.lnana@outlook.com>
  * @copyright 2018 Aliens Group, Inc.
  * @license   MIT <https://github.com/ElementaryFramework/WaterPipe/blob/master/LICENSE>
- * @version   1.3.0
+ * @version   1.4.0
  * @link      http://waterpipe.na2axl.tk
  */
 
@@ -211,12 +211,10 @@ class RequestUri implements \ArrayAccess
     public static function isMatch(string $pattern, string $uri): bool
     {
         $pattern = self::pattern2regex($pattern);
-        return (
-            preg_match("#^{$pattern}\$#", "/" . trim($uri, "/") . "/") ||
+        return (preg_match("#^{$pattern}\$#", "/" . trim($uri, "/") . "/") ||
             preg_match("#^{$pattern}\$#", "/" . trim($uri, "/")) ||
             preg_match("#^{$pattern}\$#", trim($uri, "/")) ||
-            preg_match("#^{$pattern}\$#", $uri)
-        ) != false;
+            preg_match("#^{$pattern}\$#", $uri)) != false;
     }
 
     private static function _getUriParams(string $pattern): array
