@@ -495,6 +495,9 @@ class WaterPipe
     private function _executeRequest()
     {
         try {
+            // Execute middleware
+            self::triggerBeforeExecuteEvent(Request::capture());
+
             $map = $this->_findRouteMap();
 
             if ($map !== null) {
@@ -557,9 +560,6 @@ class WaterPipe
                 // TODO: Proper exception
                 throw new \Exception("Malformed route action");
             }
-
-            // Execute middleware
-            self::triggerBeforeExecuteEvent(Request::capture());
 
             // NOTE: No code will be executed after this call...
             $this->_executeAction($runner);
