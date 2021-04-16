@@ -193,8 +193,8 @@ class Router
                     $data = new RequestData((array)simplexml_load_string($rawData));
                     break;
                 case "application/x-www-form-urlencoded":
-                    parse_str($rawData, $data);
-                    $data = new RequestData($data);
+                    parse_str($rawData, $_data);
+                    $data = new RequestData($_data);
                     break;
                 default:
                     $data = $rawData;
@@ -205,14 +205,14 @@ class Router
 
             switch ($contentType) {
                 case "application/json":
-                    $data = new RequestData(json_decode($rawData, true));
+                    $data = new RequestData((array)json_decode($rawData, true));
                     break;
                 case "application/xml":
                     $data = new RequestData((array)simplexml_load_string($rawData));
                     break;
                 case "application/x-www-form-urlencoded":
-                    parse_str($rawData, $data);
-                    $data = new RequestData($data);
+                    parse_str($rawData, $_data);
+                    $data = new RequestData($_data);
                     break;
                 default:
                     $data = $rawData;
