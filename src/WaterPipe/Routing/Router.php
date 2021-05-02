@@ -187,7 +187,7 @@ class Router
 
             switch ($contentType) {
                 case "application/json":
-                    $data = new RequestData(json_decode($rawData, true));
+                    $data = new RequestData((array)json_decode($rawData, true));
                     break;
                 case "application/xml":
                     $data = new RequestData((array)simplexml_load_string($rawData));
