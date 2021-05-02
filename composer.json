@@ -15,8 +15,8 @@
   "require": {
     "php": ">=7.1.10",
     "ext-curl": "*",
-    "elementaryframework/events": "^0.0.1",
-    "elementaryframework/streams": "^0.0.2"
+    "elementaryframework/events": "^0.1.0",
+    "elementaryframework/streams": "^0.1.0"
   },
   "keywords": [
     "url",
